@@ -1,0 +1,74 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment variables
+.env
+*.env
+!*.env.example
+
+# Logs
+*.log
+run.log
+logs/
+server/logs/
+client/logs/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Cache directories
+.cache/
+.vite/
+.eslintcache
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Development and testing files
+.history/
+test_*.sh
+test_*.js
+validate*.sh
+run.sh
+setup.sh
+
+# Temporary files
+*.tmp
+*.temp
+server/backend*.log
+server/start_backend.sh
+server/init_db.py
