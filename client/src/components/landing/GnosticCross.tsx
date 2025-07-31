@@ -28,9 +28,9 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
         {/* Vertical Line */}
         <line
           x1="200"
-          y1="20"
+          y1="10"
           x2="200"
-          y2="380"
+          y2="390"
           stroke="rgba(255, 255, 255, 0.8)"
           strokeWidth="4"
           className="cross-line"
@@ -38,9 +38,9 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
         
         {/* Horizontal Line */}
         <line
-          x1="20"
+          x1="10"
           y1="200"
-          x2="380"
+          x2="390"
           y2="200"
           stroke="rgba(255, 255, 255, 0.8)"
           strokeWidth="4"
@@ -48,14 +48,14 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
         />
         
         {/* Quadrant Buttons */}
-        {/* Top - Resources */}
+        {/* Top-Right - Resources */}
         <g 
           className="quadrant-button" 
           onClick={() => onSectionClick('resources')}
           style={{ cursor: 'pointer' }}
         >
           <path
-            d="M 200 20 A 180 180 0 0 1 370 200 L 200 200 Z"
+            d="M 200 10 A 190 190 0 0 1 390 200 L 200 200 Z"
             fill="rgba(255, 255, 255, 0.1)"
             stroke="rgba(255, 255, 255, 0.3)"
             strokeWidth="2"
@@ -84,14 +84,14 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
           </text>
         </g>
         
-        {/* Right - Organizations */}
+        {/* Bottom-Right - Organizations */}
         <g 
           className="quadrant-button" 
           onClick={() => onSectionClick('organizations')}
           style={{ cursor: 'pointer' }}
         >
           <path
-            d="M 370 200 A 180 180 0 0 1 200 380 L 200 200 Z"
+            d="M 390 200 A 190 190 0 0 1 200 390 L 200 200 Z"
             fill="rgba(255, 255, 255, 0.1)"
             stroke="rgba(255, 255, 255, 0.3)"
             strokeWidth="2"
@@ -120,14 +120,14 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
           </text>
         </g>
         
-        {/* Bottom - Community */}
+        {/* Bottom-Left - Community */}
         <g 
           className="quadrant-button" 
           onClick={() => onSectionClick('community')}
           style={{ cursor: 'pointer' }}
         >
           <path
-            d="M 200 380 A 180 180 0 0 1 30 200 L 200 200 Z"
+            d="M 200 390 A 190 190 0 0 1 10 200 L 200 200 Z"
             fill="rgba(255, 255, 255, 0.1)"
             stroke="rgba(255, 255, 255, 0.3)"
             strokeWidth="2"
@@ -156,14 +156,14 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
           </text>
         </g>
         
-        {/* Left - Map */}
+        {/* Top-Left - Map */}
         <g 
           className="quadrant-button" 
           onClick={() => onSectionClick('map')}
           style={{ cursor: 'pointer' }}
         >
           <path
-            d="M 30 200 A 180 180 0 0 1 200 20 L 200 200 Z"
+            d="M 10 200 A 190 190 0 0 1 200 10 L 200 200 Z"
             fill="rgba(255, 255, 255, 0.1)"
             stroke="rgba(255, 255, 255, 0.3)"
             strokeWidth="2"
