@@ -20,7 +20,7 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
           r="190"
           fill="none"
           stroke="rgba(255, 255, 255, 0.8)"
-          strokeWidth="4"
+          strokeWidth="6"
           className="outer-circle"
         />
         
@@ -32,7 +32,7 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
           x2="200"
           y2="390"
           stroke="rgba(255, 255, 255, 0.8)"
-          strokeWidth="4"
+          strokeWidth="6"
           className="cross-line"
         />
         
@@ -43,7 +43,7 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
           x2="390"
           y2="200"
           stroke="rgba(255, 255, 255, 0.8)"
-          strokeWidth="4"
+          strokeWidth="6"
           className="cross-line"
         />
         
@@ -63,7 +63,7 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
           />
           <text
             x="285"
-            y="110"
+            y="130"
             textAnchor="middle"
             className="quadrant-text"
             fill="white"
@@ -74,7 +74,7 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
           </text>
           <text
             x="285"
-            y="130"
+            y="150"
             textAnchor="middle"
             className="quadrant-subtext"
             fill="rgba(255, 255, 255, 0.8)"
@@ -99,7 +99,7 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
           />
           <text
             x="285"
-            y="290"
+            y="270"
             textAnchor="middle"
             className="quadrant-text"
             fill="white"
@@ -110,7 +110,7 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
           </text>
           <text
             x="285"
-            y="310"
+            y="290"
             textAnchor="middle"
             className="quadrant-subtext"
             fill="rgba(255, 255, 255, 0.8)"
@@ -135,7 +135,7 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
           />
           <text
             x="115"
-            y="290"
+            y="270"
             textAnchor="middle"
             className="quadrant-text"
             fill="white"
@@ -146,7 +146,7 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
           </text>
           <text
             x="115"
-            y="310"
+            y="290"
             textAnchor="middle"
             className="quadrant-subtext"
             fill="rgba(255, 255, 255, 0.8)"
@@ -171,7 +171,7 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
           />
           <text
             x="115"
-            y="110"
+            y="130"
             textAnchor="middle"
             className="quadrant-text"
             fill="white"
@@ -182,7 +182,7 @@ export const GnosticCross: React.FC<GnosticCrossProps> = ({ onSectionClick }) =>
           </text>
           <text
             x="115"
-            y="130"
+            y="150"
             textAnchor="middle"
             className="quadrant-subtext"
             fill="rgba(255, 255, 255, 0.8)"

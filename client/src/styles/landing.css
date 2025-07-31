@@ -146,6 +146,35 @@
   stroke: rgba(255, 255, 255, 0.6);
 }
 
+.ripple-circle {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 2;
+  opacity: 0;
+  transform-origin: center;
+}
+
+.quadrant-button:hover .ripple-circle {
+  animation: rippleExpand 0.8s ease-out;
+}
+
+@keyframes rippleExpand {
+  0% {
+    r: 20;
+    opacity: 0.8;
+    stroke-width: 3;
+  }
+  50% {
+    opacity: 0.4;
+    stroke-width: 2;
+  }
+  100% {
+    r: 120;
+    opacity: 0;
+    stroke-width: 1;
+  }
+}
+
 .quadrant-text,
 .quadrant-subtext {
   pointer-events: none;
