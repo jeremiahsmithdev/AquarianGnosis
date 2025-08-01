@@ -11,12 +11,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onAuthClic
   const { isAuthenticated, user, logout } = useAuthStore();
 
   const handleSectionClick = (section: string) => {
-    if (section === 'map' && !isAuthenticated) {
-      // Map requires authentication for full functionality
-      alert('Please sign in to access the community map and connect with other gnostics.');
-      onAuthClick();
-      return;
-    }
     onNavigate(section);
   };
 
@@ -37,7 +31,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onAuthClic
           <button onClick={() => onNavigate('community')} className="nav-link">
             Community
           </button>
-          <button onClick={() => handleSectionClick('map')} className="nav-link">
+          <button onClick={() => onNavigate('map')} className="nav-link">
             Map
           </button>
           {isAuthenticated && (
