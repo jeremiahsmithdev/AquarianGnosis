@@ -62,13 +62,8 @@ venv.bak/
 .history/
 test_*.sh
 test_*.js
-validate*.sh
-run.sh
-setup.sh
 
 # Temporary files
 *.tmp
 *.temp
 server/backend*.log
-server/start_backend.sh
-server/init_db.py
