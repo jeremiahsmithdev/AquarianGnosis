@@ -9,6 +9,110 @@ This document serves as the central reference for Claude Code when working on th
 
 ---
 
+## ⚠️ PM2 Process Management (CRITICAL)
+
+**ALWAYS use PM2 for server management. Never start servers manually.**
+
+### PM2 Service Management Workflow
+
+1. **Before starting any servers, ALWAYS check for existing PM2 processes:**
+   ```bash
+   pm2 list
+   ```
+
+2. **If processes exist, restart them instead of creating new ones:**
+   ```bash
+   pm2 restart ecosystem.config.js --update-env
+   ```
+
+3. **If no processes exist, start them:**
+   ```bash
+   pm2 start ecosystem.config.js
+   ```
+
+4. **Available PM2 commands:**
+   - `npm run dev` - Start both services via PM2
+   - `npm run dev:backend` - Start only backend via PM2  
+   - `npm run dev:frontend` - Start only frontend via PM2
+   - `npm run pm2:start` - Start all PM2 processes
+   - `npm run pm2:stop` - Stop all PM2 processes
+   - `npm run pm2:restart` - Restart all PM2 processes
+   - `npm run pm2:status` - Check PM2 process status
+   - `npm run pm2:logs` - View PM2 logs
+
+### PM2 Process Configuration
+
+The project uses `ecosystem.config.js` which defines:
+- **Backend**: `aquarian-gnosis-backend` (runs via `./server/start_backend.sh`)
+- **Frontend**: `aquarian-gnosis-frontend` (runs `npm run dev` in client directory)
+
+### Important Notes for Claude Sessions
+
+- **NEVER** use `python run.py` directly
+- **NEVER** use `npm run dev` in client directory directly  
+- **NEVER** use `uvicorn` commands directly
+- **ALWAYS** check `pm2 list` before starting servers
+- **ALWAYS** use the PM2 npm scripts or ecosystem.config.js
+- If you encounter "Address already in use" errors, check PM2 processes first
+
+### Port Configuration
+- Frontend: `localhost:3000` (managed by PM2)
+- Backend: `localhost:8000` (managed by PM2)
+
+### PM2 Troubleshooting
+
+#### Common Issues & Solutions
+
+1. **"Address already in use" Error**
+   ```bash
+   # Check what PM2 processes are running
+   pm2 list
+   
+   # If processes are running, restart them
+   pm2 restart ecosystem.config.js --update-env
+   
+   # If processes are stuck, stop and start
+   pm2 stop ecosystem.config.js
+   pm2 start ecosystem.config.js
+   ```
+
+2. **Service Not Starting**
+   ```bash
+   # Check PM2 logs for errors
+   pm2 logs aquarian-gnosis-backend
+   pm2 logs aquarian-gnosis-frontend
+   
+   # Check individual service logs
+   pm2 show aquarian-gnosis-backend
+   pm2 show aquarian-gnosis-frontend
+   ```
+
+3. **Environment Variables Not Updating**
+   ```bash
+   # Always use --update-env when restarting
+   pm2 restart ecosystem.config.js --update-env
+   ```
+
+4. **Process Health Check**
+   ```bash
+   # View process status
+   pm2 status
+   
+   # Monitor processes in real-time
+   pm2 monit
+   
+   # Check process uptime and restarts
+   pm2 list
+   ```
+
+#### Emergency Commands
+
+- **Kill all PM2 processes**: `pm2 kill` (use with caution)
+- **Force restart**: `pm2 restart ecosystem.config.js --force`
+- **Delete all processes**: `pm2 delete ecosystem.config.js`
+
+---
+
 ## Architecture Overview
 
 ### Frontend Stack
@@ -349,6 +453,36 @@ server/app/
 - [ ] No console.log statements in production code
 - [ ] Proper loading states and error boundaries
 - [ ] Security best practices followed
+
+### Git Commit Guidelines
+Use clean, concise commit messages following conventional commit format:
+
+```
+feat: brief description of the change
+
+- Bullet point explaining key changes
+- Another important change
+- Third change if needed
+```
+
+**Important Rules:**
+- Keep messages concise and focused
+- Use conventional commit types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`
+- **Do NOT include**:
+  - `🤖 Generated with [Claude Code]` footer
+  - `Co-Authored-By: Claude <noreply@anthropic.com>` attribution
+  - Overly verbose descriptions or explanations
+- Focus on **what** changed, not **how** or **why** in detail
+- Use bullet points for multiple changes
+
+**Example:**
+```
+feat: thicken gnostic cross lines and improve text positioning
+
+- Increase stroke width from 4px to 6px for circle and cross lines
+- Reposition quadrant text for symmetry and circle clearance
+- Add ripple hover effects with expanding circle animation
+```
 
 ---
 

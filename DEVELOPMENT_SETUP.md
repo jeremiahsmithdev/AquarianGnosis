@@ -63,11 +63,14 @@ python init_db.py
 ### 4. Start the Backend Server
 
 ```bash
-# Development server with auto-reload
-python run.py
+# Recommended: Use PM2 for process management
+npm run dev:backend
 
-# Or with uvicorn directly
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+# Start all services with PM2
+npm run dev
+
+# Manual startup (not recommended - use PM2 instead)
+# python run.py
 ```
 
 The API will be available at: `http://localhost:8000`
@@ -85,10 +88,14 @@ npm install
 ### 2. Start the Development Server
 
 ```bash
+# Recommended: Use PM2 for process management
+npm run dev:frontend
+
+# Start all services with PM2
 npm run dev
 ```
 
-The frontend will be available at: `http://localhost:5173`
+The frontend will be available at: `http://localhost:3000`
 
 ## Development Workflow
 
@@ -230,7 +237,7 @@ npm run dev
 ```
 
 ### Access Points
-- **Frontend**: http://localhost:5173
+- **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8000
 - **API Docs**: http://localhost:8000/docs
 

@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "A gnostic community platform for connecting seekers worldwide",
   "scripts": {
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:frontend": "cd client && npm run dev",
-    "dev:backend": "cd server && python run.py",
+    "dev": "pm2 start ecosystem.config.js",
+    "dev:frontend": "pm2 start ecosystem.config.js --only aquarian-gnosis-frontend",
+    "dev:backend": "pm2 start ecosystem.config.js --only aquarian-gnosis-backend",
     "install:all": "npm install && cd client && npm install && cd ../server && pip install -r requirements.txt",
     "build": "cd client && npm run build",
     "test": "concurrently \"npm run test:backend\" \"npm run test:frontend\"",
