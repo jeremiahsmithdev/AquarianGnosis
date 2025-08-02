@@ -26,6 +26,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.LayerGroup>(new L.LayerGroup());
   const userMarkerRef = useRef<L.Marker | null>(null);
+  const currentPositionMarkerRef = useRef<L.Marker | null>(null);
   
   const [isLocatingUser, setIsLocatingUser] = useState(false);
   
@@ -66,8 +67,23 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
+      // Clean up marker references
+      userMarkerRef.current = null;
+      currentPositionMarkerRef.current = null;
     };
   }, []);
+
+  // Create red pin icon for current position
+  const createRedPinIcon = () => {
+    return L.icon({
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+  };
 
   // Get user's current position
   const getCurrentPosition = () => {
@@ -90,7 +106,37 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         
         // Center map on user's location
         if (mapInstanceRef.current) {
-          mapInstanceRef.current.setView([coords.latitude, coords.longitude], 13);
+          mapInstanceRef.current.setView([coords.latitude, coords.longitude], 15);
+          
+          // Remove existing current position marker if it exists
+          if (currentPositionMarkerRef.current) {
+            mapInstanceRef.current.removeLayer(currentPositionMarkerRef.current);
+          }
+          
+          // Create red pin marker
+          const redPinMarker = L.marker([coords.latitude, coords.longitude], {
+            icon: createRedPinIcon()
+          });
+          
+          // Add popup to the red pin
+          redPinMarker.bindPopup(`
+            <div class="map-popup">
+              <div class="popup-title">📍 Your Current Location</div>
+              <div class="popup-coords">
+                Lat: ${coords.latitude.toFixed(6)}<br>
+                Lng: ${coords.longitude.toFixed(6)}
+              </div>
+              <div class="popup-accuracy">
+                Accuracy: ±${Math.round(coords.accuracy)}m
+              </div>
+            </div>
+          `);
+          
+          // Add marker to map
+          redPinMarker.addTo(mapInstanceRef.current);
+          
+          // Store reference to current position marker
+          currentPositionMarkerRef.current = redPinMarker;
         }
         
         setIsLocatingUser(false);

@@ -40,3 +40,33 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Navigation Loading Indicator */
+.navigation-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 9999;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.loading-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+  animation: navigationProgress 0.3s ease-out;
+  transform-origin: left;
+}
+
+@keyframes navigationProgress {
+  0% {
+    transform: scaleX(0);
+  }
+  50% {
+    transform: scaleX(0.7);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}

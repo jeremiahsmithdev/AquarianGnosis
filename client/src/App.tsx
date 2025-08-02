@@ -1,21 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from './stores/authStore';
+import { useNavigationStore, getPageFromPath, getPagePath } from './stores/navigationStore';
 import { LandingPage } from './pages/LandingPage';
 import { AuthPage } from './pages/AuthPage';
 import { MapPage } from './pages/MapPage';
 import { MessagingPage } from './pages/MessagingPage';
+import './App.css';
 import './styles/landing.css';
 import './styles/auth.css';
 import './styles/placeholder.css';
 import './styles/map.css';
 import './styles/messaging.css';
 
-type PageType = 'landing' | 'auth' | 'map' | 'resources' | 'organizations' | 'community' | 'messages';
+// Router sync component - keeps Zustand store in sync with URL (one-way sync)
+function RouterSync() {
+  const location = useLocation();
+  const { setCurrentPage } = useNavigationStore();
 
-function App() {
-  const [currentPage, setCurrentPage] = useState<PageType>('landing');
-  const [selectedUser, setSelectedUser] = useState<{ id: string; username: string } | null>(null);
+  // Keep store in sync with URL changes (browser navigation, direct URL access)
+  useEffect(() => {
+    const pageFromPath = getPageFromPath(location.pathname);
+    setCurrentPage(pageFromPath);
+  }, [location.pathname, setCurrentPage]);
+
+  return null;
+}
+
+function AppContent() {
+  const navigate = useNavigate();
   const { isAuthenticated, getCurrentUser } = useAuthStore();
+  const { 
+    selectedUser,
+    setIsNavigating,
+    setSelectedUser
+  } = useNavigationStore();
 
   useEffect(() => {
     // Check authentication status on app load
@@ -25,33 +44,58 @@ function App() {
     }
   }, [getCurrentUser]);
 
-  const handleNavigate = (page: PageType) => {
-    setCurrentPage(page);
+  const handleNavigate = (page: string) => {
+    setIsNavigating(true);
+    const path = getPagePath(page as any);
+    navigate(path);
+    setTimeout(() => setIsNavigating(false), 100);
   };
 
   const handleAuthSuccess = () => {
-    setCurrentPage('landing');
+    setIsNavigating(true);
+    navigate('/');
+    setTimeout(() => setIsNavigating(false), 100);
   };
 
-  const renderCurrentPage = () => {
-    switch (currentPage) {
-      case 'auth':
-        return <AuthPage onSuccess={handleAuthSuccess} />;
+  const handleUserSelect = (userId: string) => {
+    const user = { id: userId, username: `User ${userId.slice(0, 8)}` };
+    setSelectedUser(user);
+    setIsNavigating(true);
+    navigate('/messages');
+    setTimeout(() => setIsNavigating(false), 100);
+  };
+
+  const { isNavigating } = useNavigationStore();
+
+  return (
+    <div className="app">
+      <RouterSync />
       
-      case 'map':
-        return (
+      {/* Loading state for smooth transitions */}
+      {isNavigating && (
+        <div className="navigation-loading">
+          <div className="loading-bar"></div>
+        </div>
+      )}
+      
+      <Routes>
+        <Route path="/" element={
+          <LandingPage
+            onNavigate={handleNavigate}
+            onAuthClick={() => handleNavigate('auth')}
+          />
+        } />
+        
+        <Route path="/auth" element={<AuthPage onSuccess={handleAuthSuccess} />} />
+        
+        <Route path="/map" element={
           <MapPage 
             onNavigate={handleNavigate}
-            onUserSelect={(userId) => {
-              // For now, just navigate to messages - in a real app we'd fetch user info
-              setSelectedUser({ id: userId, username: `User ${userId.slice(0, 8)}` });
-              setCurrentPage('messages');
-            }}
+            onUserSelect={handleUserSelect}
           />
-        );
-      
-      case 'resources':
-        return (
+        } />
+        
+        <Route path="/resources" element={
           <div className="page-placeholder">
             <div className="placeholder-content">
               <h1>Resources</h1>
@@ -67,10 +111,9 @@ function App() {
               </button>
             </div>
           </div>
-        );
-      
-      case 'organizations':
-        return (
+        } />
+        
+        <Route path="/organizations" element={
           <div className="page-placeholder">
             <div className="placeholder-content">
               <h1>Organizations</h1>
@@ -86,10 +129,9 @@ function App() {
               </button>
             </div>
           </div>
-        );
-      
-      case 'community':
-        return (
+        } />
+        
+        <Route path="/community" element={
           <div className="page-placeholder">
             <div className="placeholder-content">
               <h1>Community Forum</h1>
@@ -105,32 +147,25 @@ function App() {
               </button>
             </div>
           </div>
-        );
-      
-      case 'messages':
-        return (
+        } />
+        
+        <Route path="/messages" element={
           <MessagingPage
             onNavigate={handleNavigate}
             initialRecipientId={selectedUser?.id}
             initialRecipientUsername={selectedUser?.username}
           />
-        );
-      
-      case 'landing':
-      default:
-        return (
-          <LandingPage
-            onNavigate={handleNavigate}
-            onAuthClick={() => handleNavigate('auth')}
-          />
-        );
-    }
-  };
-
-  return (
-    <div className="app">
-      {renderCurrentPage()}
+        } />
+      </Routes>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   );
 }
 
