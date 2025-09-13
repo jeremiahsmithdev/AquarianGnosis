@@ -1,69 +1,78 @@
-# React + TypeScript + Vite
+# Aquarian Gnosis Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend application for the Aquarian Gnosis community platform built with React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+## Features Implemented
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Core Features
+- Interactive landing page with gnostic cross navigation
+- User authentication system
+- Community map with location sharing
+- Messaging system between users
 
-## Expanding the ESLint configuration
+### Phase 2 Community Features
+- **Forum System**: Discussion categories and threads
+- **Study Groups**: Group creation and membership management
+- **Resource Sharing**: Community-driven content sharing
+- **Organizations Directory**: Listing of gnostic organizations
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Development Setup
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+2. Start development server:
+   ```bash
+   npm run dev
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+3. Build for production:
+   ```bash
+   npm run build
+   ```
+
+4. Run tests:
+   ```bash
+   npm test
+   ```
+
+## Project Structure
+
+```
+src/
+├── components/     # Reusable UI components
+├── pages/          # Page-level components
+├── stores/         # Zustand state management
+├── services/       # API communication layer
+├── types/          # TypeScript type definitions
+└── styles/         # CSS stylesheets
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Environment Variables
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Create a `.env.local` file in the client directory with:
 ```
+VITE_API_BASE_URL=http://localhost:8000/api/v1
+```
+
+## Testing
+
+Run frontend tests with:
+```bash
+npm test
+```
+
+Or for UI testing:
+```bash
+npm run test:ui
+```
+
+## Dependencies
+
+- React 18 with TypeScript
+- Zustand for state management
+- Axios for API communication
+- Leaflet.js for mapping
+- React Router DOM for navigation

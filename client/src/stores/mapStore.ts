@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { apiService } from '../services/api';
-import type { UserLocation, MapStats, MapFilters, GeolocationCoords } from '../types';
-
+import type { UserLocation, MapStats, MapFilters, GeolocationCoords } from '@/types';
 interface MapState {
   userLocation: UserLocation | null;
   nearbyLocations: UserLocation[];

@@ -70,3 +70,7 @@
     transform: scaleX(1);
   }
 }
+@import './styles/community.css';
+@import './styles/study-group.css';
+@import './styles/resources.css';
+@import './styles/organizations.css';

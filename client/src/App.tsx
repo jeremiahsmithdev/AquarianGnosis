@@ -5,6 +5,10 @@ import { useNavigationStore, getPageFromPath, getPagePath } from './stores/navig
 import { LandingPage } from './pages/LandingPage';
 import { AuthPage } from './pages/AuthPage';
 import { MapPage } from './pages/MapPage';
+import { CommunityPage } from './pages/CommunityPage';
+import { StudyGroupPage } from './pages/StudyGroupPage';
+import { ResourcesPage } from './pages/ResourcesPage';
+import { OrganizationsPage } from './pages/OrganizationsPage';
 import { MessagingPage } from './pages/MessagingPage';
 import './App.css';
 import './styles/landing.css';
@@ -96,57 +100,15 @@ function AppContent() {
         } />
         
         <Route path="/resources" element={
-          <div className="page-placeholder">
-            <div className="placeholder-content">
-              <h1>Resources</h1>
-              <p>Coming in Phase 3! This section will include:</p>
-              <ul>
-                <li>Complete collection of Samael Aun Weor's works</li>
-                <li>Radio stations and audio lectures</li>
-                <li>Video content and documentaries</li>
-                <li>Study materials and practice guides</li>
-              </ul>
-              <button onClick={() => handleNavigate('landing')} className="back-button">
-                Back to Home
-              </button>
-            </div>
-          </div>
+          <ResourcesPage onNavigate={handleNavigate} />
         } />
         
         <Route path="/organizations" element={
-          <div className="page-placeholder">
-            <div className="placeholder-content">
-              <h1>Organizations</h1>
-              <p>Coming in Phase 3! This directory will feature:</p>
-              <ul>
-                <li>Major gnostic organizations worldwide</li>
-                <li>Local centers and study groups</li>
-                <li>Contact information and resources</li>
-                <li>Integration with the community map</li>
-              </ul>
-              <button onClick={() => handleNavigate('landing')} className="back-button">
-                Back to Home
-              </button>
-            </div>
-          </div>
+          <OrganizationsPage onNavigate={handleNavigate} />
         } />
         
         <Route path="/community" element={
-          <div className="page-placeholder">
-            <div className="placeholder-content">
-              <h1>Community Forum</h1>
-              <p>Coming in Phase 2! The community section will offer:</p>
-              <ul>
-                <li>Discussion forums on gnostic topics</li>
-                <li>Study group coordination</li>
-                <li>Q&A with experienced practitioners</li>
-                <li>Regional discussions and meetups</li>
-              </ul>
-              <button onClick={() => handleNavigate('landing')} className="back-button">
-                Back to Home
-              </button>
-            </div>
-          </div>
+          <CommunityPage onNavigate={handleNavigate} />
         } />
         
         <Route path="/messages" element={

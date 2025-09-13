@@ -1,0 +1,102 @@
+.organizations-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.organizations-page .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.organizations-page .page-header h1 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 2.5rem;
+}
+
+.organizations-tabs {
+  display: flex;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.organizations-tabs .tab {
+  background: none;
+  border: none;
+  padding: 15px 30px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s;
+}
+
+.organizations-tabs .tab.active {
+  color: #3498db;
+  border-bottom: 3px solid #3498db;
+  font-weight: bold;
+}
+
+.organizations-tabs .tab:hover {
+  color: #3498db;
+}
+
+.organizations-content {
+  padding: 20px 0;
+}
+
+.organizations-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.organization-item {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+.organization-item:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-color: #3498db;
+}
+
+.organization-item h3 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+}
+
+.organization-location {
+  color: #3498db;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+}
+
+.organization-description {
+  margin: 0 0 15px 0;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.visit-button {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+}
+
+.visit-button:hover {
+  background-color: #219653;
+}

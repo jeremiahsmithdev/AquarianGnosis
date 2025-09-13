@@ -15,8 +15,11 @@ import sys
 from sqlalchemy import create_engine
 from app.core.config import settings
 from app.core.database import Base
+# Import all models to ensure they're registered with SQLAlchemy
 from app.models.user import User, UserLocation, Message
-
+from app.models.resource import SharedResource
+from app.models.forum import ForumCategory, ForumThread, ForumReply
+from app.models.study_group import StudyGroup, StudyGroupMember
 def create_database():
     """Create database tables"""
     print("Creating database tables...")

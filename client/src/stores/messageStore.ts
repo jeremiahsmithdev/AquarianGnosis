@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { apiService } from '../services/api';
-import type { Message, MessageRequest } from '../types';
-
+import type { Message, MessageRequest } from '@/types';
 interface Conversation {
   user_id: string;
   username: string;

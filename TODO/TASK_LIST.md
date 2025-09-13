@@ -20,5 +20,38 @@ Agents: Process tasks from the 'Task List' below that are not marked as complete
 - [ ] Subscribe to study groups
 - [ ] Subscribe to newsletter (topics, e.g. dev, features)
 
-### UI
-- [ ] - ⨁  favicon
+## Sections
+### Map
+- Filter by:
+    - Organization
+    - Independent
+    - People
+    - Related
+    - Meditation Centres
+- Categories of pins:
+    - People
+    - Organizations
+    - Study Groups
+    - Meditation Centres
+    - Gnostic Lumisials
+    - Related (e.g. Ashrams)
+
+### Resources
+- [x] SEX - The Secret Gate to Eden
+    - Complete collection of Samael Aun Weor's works
+        - https://drive.google.com/drive/folders/1u_4eef1SPAEct8uY6Xh7NGCdnOdTVTHZ?hl=ID
+    - Radio stations and audio lectures
+    - Video content and documentaries
+    - Study materials and practice guides
+
+### Community
+- [x] Discussion forums on gnostic topics
+- [x] Study group coordination
+- [ ] Q&A with experienced practitioners
+- [ ] Regional discussions and meetups
+
+### Organisations
+- [x] Major gnostic organizations worldwide
+- [x] Local centers and study groups
+- [x] Contact information and resources
+- [x] Integration with the community map

@@ -1,196 +1,75 @@
-import type { 
-  User, 
-  LoginRequest, 
-  RegisterRequest, 
-  AuthResponse, 
-  UserLocation, 
-  LocationRequest, 
-  Message, 
-  MessageRequest,
-  ApiError as ApiErrorType
-} from '../types';
+import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000/api/v1';
+const apiClient = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1',
+  timeout: 10000,
+});
 
-class ApiError extends Error {
-  constructor(public status: number, message: string) {
-    super(message);
-    this.name = 'ApiError';
-  }
-}
-
-class ApiService {
-  private baseUrl: string;
-  private token: string | null = null;
-
-  constructor(baseUrl: string = API_BASE_URL) {
-    this.baseUrl = baseUrl;
-    this.token = localStorage.getItem('access_token');
-  }
-
-  private async request<T>(
-    endpoint: string, 
-    options: RequestInit = {}
-  ): Promise<T> {
-    const url = `${this.baseUrl}${endpoint}`;
-    const config: RequestInit = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...(this.token && { Authorization: `Bearer ${this.token}` }),
-        ...options.headers,
-      },
-      ...options,
-    };
-
-    try {
-      const response = await fetch(url, config);
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ detail: 'Unknown error' }));
-        throw new ApiError(response.status, errorData.detail || 'Request failed');
-      }
-
-      return await response.json();
-    } catch (error) {
-      if (error instanceof ApiError) {
-        throw error;
-      }
-      throw new ApiError(0, 'Network error');
+// Request interceptor to add auth token
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
+);
 
-  // Authentication methods
-  async login(credentials: LoginRequest): Promise<AuthResponse> {
-    const response = await this.request<AuthResponse>('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(credentials),
-    });
-    
-    this.token = response.access_token;
-    localStorage.setItem('access_token', response.access_token);
-    
-    return response;
+// Response interceptor to handle auth errors
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('access_token');
+      window.location.href = '/auth';
+    }
+    return Promise.reject(error);
   }
+);
 
-  async register(userData: RegisterRequest): Promise<User> {
-    return this.request<User>('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify(userData),
-    });
+// Map API methods
+const mapApi = {
+  getUserLocation: async () => {
+    const response = await apiClient.get('/map/location');
+    return response.data;
+  },
+  
+  addLocation: async (locationData: { latitude: number; longitude: number; is_public: boolean; status: string }) => {
+    const response = await apiClient.post('/map/location', locationData);
+    return response.data;
+  },
+  
+  updateLocation: async (updates: any) => {
+    const response = await apiClient.put('/map/location', updates);
+    return response.data;
+  },
+  
+  deleteLocation: async () => {
+    const response = await apiClient.delete('/map/location');
+    return response.data;
+  },
+  
+  getNearbyLocations: async (radius: number) => {
+    const response = await apiClient.get(`/map/locations/nearby?radius=${radius}`);
+    return response.data;
+  },
+  
+  getPublicLocations: async () => {
+    const response = await apiClient.get('/map/locations/public');
+    return response.data;
+  },
+  
+  getMapStats: async () => {
+    const response = await apiClient.get('/map/stats');
+    return response.data;
   }
+};
 
-  async getCurrentUser(): Promise<User> {
-    return this.request<User>('/auth/me');
-  }
+// Create the combined API service by extending the axios instance
+const apiService = Object.assign(apiClient, mapApi);
 
-  logout(): void {
-    this.token = null;
-    localStorage.removeItem('access_token');
-  }
-
-  // User profile methods
-  async getUserProfile(): Promise<User> {
-    return this.request<User>('/users/profile');
-  }
-
-  async updateUserProfile(updates: Partial<User>): Promise<User> {
-    return this.request<User>('/users/profile', {
-      method: 'PUT',
-      body: JSON.stringify(updates),
-    });
-  }
-
-  // Location methods
-  async addLocation(location: LocationRequest): Promise<UserLocation> {
-    return this.request<UserLocation>('/users/location', {
-      method: 'POST',
-      body: JSON.stringify(location),
-    });
-  }
-
-  async getUserLocation(): Promise<UserLocation> {
-    return this.request<UserLocation>('/users/location');
-  }
-
-  async updateLocation(updates: Partial<LocationRequest>): Promise<UserLocation> {
-    return this.request<UserLocation>('/users/location', {
-      method: 'PUT',
-      body: JSON.stringify(updates),
-    });
-  }
-
-  async deleteLocation(): Promise<{ message: string }> {
-    return this.request<{ message: string }>('/users/location', {
-      method: 'DELETE',
-    });
-  }
-
-  // Map methods
-  async getNearbyLocations(radiusKm: number = 50): Promise<UserLocation[]> {
-    return this.request<UserLocation[]>(`/map/locations?radius_km=${radiusKm}`);
-  }
-
-  async getPublicLocations(): Promise<UserLocation[]> {
-    return this.request<UserLocation[]>('/map/locations/public');
-  }
-
-  async getMapStats(): Promise<{
-    total_users: number;
-    users_with_locations: number;
-    public_locations: number;
-    location_sharing_rate: number;
-  }> {
-    return this.request('/map/stats');
-  }
-
-  // Message methods
-  async sendMessage(message: MessageRequest): Promise<Message> {
-    return this.request<Message>('/messages/', {
-      method: 'POST',
-      body: JSON.stringify(message),
-    });
-  }
-
-  async getMessages(conversationWith?: string, limit: number = 50, offset: number = 0): Promise<Message[]> {
-    const params = new URLSearchParams({
-      limit: limit.toString(),
-      offset: offset.toString(),
-      ...(conversationWith && { conversation_with: conversationWith }),
-    });
-    
-    return this.request<Message[]>(`/messages/?${params}`);
-  }
-
-  async getConversations(): Promise<Array<{
-    user_id: string;
-    username: string;
-    latest_message: string | null;
-    latest_message_time: string | null;
-    unread_count: number;
-  }>> {
-    return this.request('/messages/conversations');
-  }
-
-  async markMessageRead(messageId: string): Promise<{ message: string }> {
-    return this.request<{ message: string }>(`/messages/${messageId}/read`, {
-      method: 'PUT',
-    });
-  }
-
-  async getUnreadCount(): Promise<{ unread_count: number }> {
-    return this.request<{ unread_count: number }>('/messages/unread/count');
-  }
-
-  // Utility methods
-  isAuthenticated(): boolean {
-    return !!this.token;
-  }
-
-  setToken(token: string): void {
-    this.token = token;
-    localStorage.setItem('access_token', token);
-  }
-}
-
-export const apiService = new ApiService();
-export { ApiError };
+export { apiService };
