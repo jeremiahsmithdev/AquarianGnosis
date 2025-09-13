@@ -34,12 +34,16 @@ function RouterSync() {
 
 function AppContent() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isAuthenticated, getCurrentUser } = useAuthStore();
-  const { 
+  const {
     selectedUser,
     setIsNavigating,
     setSelectedUser
   } = useNavigationStore();
+
+  // Check if BETA mode is enabled
+  const isBetaMode = import.meta.env.BETA === 'true';
 
   useEffect(() => {
     // Check authentication status on app load
@@ -48,6 +52,13 @@ function AppContent() {
       getCurrentUser();
     }
   }, [getCurrentUser]);
+
+  useEffect(() => {
+    // In BETA mode, redirect to auth if not authenticated and not already on auth page
+    if (isBetaMode && !isAuthenticated && location.pathname !== '/auth') {
+      navigate('/auth');
+    }
+  }, [isBetaMode, isAuthenticated, location.pathname, navigate]);
 
   const handleNavigate = (page: string) => {
     setIsNavigating(true);
@@ -86,10 +97,14 @@ function AppContent() {
 
       <Routes>
         <Route path="/" element={
-          <LandingPage
-            onNavigate={handleNavigate}
-            onAuthClick={() => handleNavigate('auth')}
-          />
+          (isBetaMode && !isAuthenticated) ? (
+            <AuthPage onSuccess={handleAuthSuccess} />
+          ) : (
+            <LandingPage
+              onNavigate={handleNavigate}
+              onAuthClick={() => handleNavigate('auth')}
+            />
+          )
         } />
         
         <Route path="/auth" element={<AuthPage onSuccess={handleAuthSuccess} />} />

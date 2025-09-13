@@ -72,7 +72,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onAuthClic
           <div className="gnostic-cross-wrapper">
             <GnosticCross onSectionClick={handleSectionClick} />
           </div>
-          
+
+          <div className="hero-quote">
+            <p className="quote-text">
+              "All religions are precious pearls strung on the golden thread of divinity."
+            </p>
+            <p className="quote-author">- Samael Aun Weor</p>
+            <p className="wisdom-text">
+              The Tree of Life has many branches.
+            </p>
+          </div>
+
           <div className="hero-description">
             <p>
               Click on each quadrant of the Gnostic Cross to explore different sections 
