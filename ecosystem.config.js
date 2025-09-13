@@ -6,12 +6,12 @@ module.exports = {
       script: './start_backend.sh',
       env: {
         NODE_ENV: 'development',
-        PORT: 8000,
+        PORT: 5040,
         REDIS_URL: 'redis://localhost:6379'
       },
       env_production: {
         NODE_ENV: 'production',
-        PORT: 8000,
+        PORT: 5040,
         REDIS_URL: 'redis://localhost:6379'
       },
       instances: 1,
@@ -31,12 +31,12 @@ module.exports = {
       env: {
         NODE_ENV: 'development',
         PORT: 3000,
-        VITE_API_BASE_URL: 'http://localhost:8000/api/v1'
+        VITE_API_BASE_URL: 'http://localhost:5040/api/v1'
       },
       env_production: {
         NODE_ENV: 'production',
         PORT: 3000,
-        VITE_API_BASE_URL: 'http://localhost:8000/api/v1'
+        VITE_API_BASE_URL: 'https://aquariangnosis.org/api/v1'
       },
       instances: 1,
       autorestart: true,

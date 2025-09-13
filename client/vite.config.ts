@@ -13,7 +13,7 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         runtimeCaching: [
           {
-            urlPattern: /^http:\/\/localhost:8000\/api\//,
+            urlPattern: /^https?:\/\/(localhost:5040|aquariangnosis\.org)\/api\//,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-cache',
@@ -70,7 +70,7 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true,
-    allowedHosts: ['localhost', '127.0.0.1', 'macbook']
+    allowedHosts: ['localhost', '127.0.0.1', 'macbook', 'oracle', 'aquariangnosis.org', 'www.aquariangnosis.org']
   },
   resolve: {
     alias: {
