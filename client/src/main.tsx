@@ -3,28 +3,28 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 
-// Aggressively unregister any existing service workers
+// Register PWA service worker
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(function(registrations) {
-    let hasServiceWorkers = registrations.length > 0;
-    for(let registration of registrations) {
-      registration.unregister().then(() => {
-        console.log('Service worker unregistered');
-      });
-    }
-    
-    // Force reload after clearing service workers
-    if (hasServiceWorkers) {
-      setTimeout(() => {
-        window.location.reload();
-      }, 100);
-    }
-  });
-  
-  // Also clear any cached service worker
-  if (navigator.serviceWorker.controller) {
-    navigator.serviceWorker.controller.postMessage('SKIP_WAITING');
-  }
+  // Import and register the PWA service worker
+  import('virtual:pwa-register').then(({ registerSW }) => {
+    const updateSW = registerSW({
+      onNeedRefresh() {
+        // Show a prompt to user for update
+        if (confirm('New content available. Reload?')) {
+          updateSW(true)
+        }
+      },
+      onOfflineReady() {
+        console.log('App ready to work offline')
+      },
+      onRegistered(r) {
+        console.log('SW Registered: ' + r)
+      },
+      onRegisterError(error) {
+        console.log('SW registration error', error)
+      }
+    })
+  })
 }
 
 createRoot(document.getElementById('root')!).render(

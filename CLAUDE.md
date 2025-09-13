@@ -435,6 +435,7 @@ feat: brief description of the change
   - Overly verbose descriptions or explanations
 - Focus on **what** changed, not **how** or **why** in detail
 - Use bullet points for multiple changes
+- DO NOT pre-emptively commit without being instructed to do so.
 
 **Example:**
 ```

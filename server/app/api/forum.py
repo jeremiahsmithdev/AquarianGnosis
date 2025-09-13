@@ -1,20 +1,39 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.core.database import get_db
+from app.core.redis import redis_manager, cache_result
 from app.models.forum import ForumCategory as ForumCategoryModel, ForumThread as ForumThreadModel, ForumReply as ForumReplyModel
 from app.models.user import User
 from app.schemas.forum import ForumCategoryCreate, ForumCategoryUpdate, ForumThreadCreate, ForumThreadUpdate, ForumReplyCreate, ForumReplyUpdate, ForumCategory, ForumThread, ForumReply
 from app.api.auth import get_current_user
 from typing import List
 from uuid import UUID
+import structlog
+
+logger = structlog.get_logger()
 
 router = APIRouter()
 
 # Forum Category endpoints
 @router.get("/categories", response_model=List[ForumCategory])
-def get_categories(db: Session = Depends(get_db)):
+async def get_categories(db: Session = Depends(get_db)):
+    # Try to get cached categories first
+    cache_key = "forum:categories"
+    cached_categories = await redis_manager.get_json(cache_key)
+
+    if cached_categories:
+        logger.debug("Returning cached forum categories")
+        return cached_categories
+
+    # Get categories from database
     categories = db.query(ForumCategoryModel).all()
-    return categories
+    categories_data = [ForumCategory.from_orm(cat).dict() for cat in categories]
+
+    # Cache for 10 minutes
+    await redis_manager.set_json(cache_key, categories_data, expire=600)
+    logger.debug("Forum categories cached")
+
+    return categories_data
 
 @router.post("/categories", response_model=ForumCategory)
 def create_category(

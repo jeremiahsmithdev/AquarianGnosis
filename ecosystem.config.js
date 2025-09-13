@@ -6,11 +6,13 @@ module.exports = {
       script: './start_backend.sh',
       env: {
         NODE_ENV: 'development',
-        PORT: 8000
+        PORT: 8000,
+        REDIS_URL: 'redis://localhost:6379'
       },
       env_production: {
         NODE_ENV: 'production',
-        PORT: 8000
+        PORT: 8000,
+        REDIS_URL: 'redis://localhost:6379'
       },
       instances: 1,
       autorestart: true,
@@ -28,11 +30,13 @@ module.exports = {
       args: 'run dev',
       env: {
         NODE_ENV: 'development',
-        PORT: 3000
+        PORT: 3000,
+        VITE_API_BASE_URL: 'http://localhost:8000/api/v1'
       },
       env_production: {
         NODE_ENV: 'production',
-        PORT: 3000
+        PORT: 3000,
+        VITE_API_BASE_URL: 'http://localhost:8000/api/v1'
       },
       instances: 1,
       autorestart: true,
@@ -41,6 +45,28 @@ module.exports = {
       error_file: './logs/frontend-error.log',
       out_file: './logs/frontend-out.log',
       log_file: './logs/frontend-combined.log',
+      time: true
+    },
+    {
+      name: 'aquarian-gnosis-worker',
+      cwd: './server',
+      script: 'python3',
+      args: '-m app.workers.task_worker',
+      env: {
+        NODE_ENV: 'development',
+        REDIS_URL: 'redis://localhost:6379'
+      },
+      env_production: {
+        NODE_ENV: 'production',
+        REDIS_URL: 'redis://localhost:6379'
+      },
+      instances: 1,
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '512M',
+      error_file: './logs/worker-error.log',
+      out_file: './logs/worker-out.log',
+      log_file: './logs/worker-combined.log',
       time: true
     }
   ]

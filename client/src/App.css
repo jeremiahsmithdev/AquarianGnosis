@@ -1,3 +1,8 @@
+@import './styles/community.css';
+@import './styles/study-group.css';
+@import './styles/resources.css';
+@import './styles/organizations.css';
+
 #root {
   width: 100%;
   margin: 0;
@@ -70,7 +75,3 @@
     transform: scaleX(1);
   }
 }
-@import './styles/community.css';
-@import './styles/study-group.css';
-@import './styles/resources.css';
-@import './styles/organizations.css';
