@@ -14,14 +14,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        navigateFallbackDenylist: [/^\/api\//],
         runtimeCaching: [
-          {
-            urlPattern: /^https?:\/\/(localhost:5040|aquariangnosis\.org)\/api\//,
-            handler: 'NetworkOnly',
-            options: {
-              cacheName: 'api-cache'
-            }
-          },
           {
             urlPattern: /\.(?:png|jpg|jpeg|svg|gif)$/,
             handler: 'CacheFirst',
