@@ -33,7 +33,9 @@ class WebhookHandler(BaseHTTPRequestHandler):
                     os.chdir("..")
 
                     # 4. PM2 restart with production environment
-                    subprocess.run(["pm2", "restart", "ecosystem.config.js", "--env", "production"])
+                    restart_env = os.environ.copy()
+                    restart_env["NODE_ENV"] = "production"
+                    subprocess.run(["pm2", "restart", "ecosystem.config.js", "--update-env"], env=restart_env)
                     
                     self.send_response(200)
                     self.wfile.write(b"OK")
