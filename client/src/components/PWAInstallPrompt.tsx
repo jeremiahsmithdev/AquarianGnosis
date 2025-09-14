@@ -24,6 +24,26 @@ export default function PWAInstallPrompt() {
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
 
+    // Development mode: Show install prompt after 2 seconds for testing
+    if (import.meta.env.DEV) {
+      const devTimer = setTimeout(() => {
+        setIsVisible(true)
+        // Create a mock prompt for development
+        setDeferredPrompt({
+          prompt: async () => console.log('Mock PWA install triggered'),
+          userChoice: Promise.resolve({ outcome: 'accepted' as const, platform: 'web' }),
+          platforms: ['web'],
+          preventDefault: () => {},
+          type: 'beforeinstallprompt'
+        } as BeforeInstallPromptEvent)
+      }, 2000)
+
+      return () => {
+        window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+        clearTimeout(devTimer)
+      }
+    }
+
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     }
@@ -59,7 +79,23 @@ export default function PWAInstallPrompt() {
   }
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 bg-blue-600 text-white p-4 rounded-lg shadow-lg z-50 md:left-auto md:right-4 md:max-w-sm">
+    <div
+      className="fixed text-white shadow-xl z-50 transform transition-all duration-300 ease-out animate-slide-in"
+      style={{
+        top: window.innerWidth >= 768 ? '80px' : '60px',
+        right: '16px',
+        left: window.innerWidth >= 768 ? 'auto' : '16px',
+        transform: 'none',
+        maxWidth: window.innerWidth >= 768 ? '20rem' : 'calc(100vw - 32px)',
+        padding: window.innerWidth >= 768 ? '24px' : '16px',
+        borderRadius: window.innerWidth >= 768 ? '16px' : '8px',
+        animation: 'slideInRight 0.3s ease-out',
+        boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid rgba(255, 255, 255, 0.2)'
+      }}
+    >
       <div className="flex items-start gap-3">
         <div className="flex-1">
           <h3 className="font-semibold text-sm">Install Aquarian Gnosis</h3>
@@ -82,6 +118,7 @@ export default function PWAInstallPrompt() {
         >
           Install
         </button>
+        <div className="flex-1"></div>
         <button
           onClick={handleDismiss}
           className="text-blue-100 hover:text-white px-3 py-1 rounded text-sm transition-colors"
@@ -89,6 +126,19 @@ export default function PWAInstallPrompt() {
           Maybe Later
         </button>
       </div>
+
+      <style jsx>{`
+        @keyframes slideInRight {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+      `}</style>
     </div>
   )
 }
