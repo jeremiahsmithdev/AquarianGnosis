@@ -75,7 +75,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onAuthClic
 
           <div className="hero-quote">
             <p className="quote-text">
-              "All religions are precious pearls strung on the golden thread of divinity."
+              "All religions are precious pearls strung upon golden thread of divinity."
             </p>
             <p className="quote-author">- Samael Aun Weor</p>
             <p className="wisdom-text">
