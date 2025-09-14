@@ -103,7 +103,7 @@ export default function PWAInstallPrompt() {
         right: '16px',
         left: window.innerWidth >= 768 ? 'auto' : '16px',
         transform: 'none',
-        maxWidth: window.innerWidth >= 768 ? '20rem' : 'calc(100vw - 32px)',
+        maxWidth: '20rem',
         padding: window.innerWidth >= 768 ? '24px' : '16px',
         borderRadius: window.innerWidth >= 768 ? '16px' : '8px',
         animation: 'slideInRight 0.3s ease-out',
@@ -122,7 +122,7 @@ export default function PWAInstallPrompt() {
         </div>
         <button
           onClick={handleDismiss}
-          className="text-blue-100 hover:text-white p-1"
+          className="text-blue-100 hover:text-white p-1 transition-all duration-150 hover:opacity-80 active:scale-90 active:opacity-60 select-none"
           aria-label="Dismiss install prompt"
         >
           ✕
@@ -131,14 +131,14 @@ export default function PWAInstallPrompt() {
       <div className="flex gap-2 mt-3">
         <button
           onClick={handleInstallClick}
-          className="bg-white text-blue-600 px-3 py-1 rounded text-sm font-medium hover:bg-blue-50 transition-colors"
+          className="bg-white text-blue-600 px-3 py-1 rounded text-sm font-medium hover:bg-blue-50 hover:opacity-90 transition-all duration-150 active:scale-90 active:bg-blue-100 select-none"
         >
           Install
         </button>
         <div className="flex-1"></div>
         <button
           onClick={handleDismiss}
-          className="text-blue-100 hover:text-white px-3 py-1 rounded text-sm transition-colors"
+          className="text-blue-100 hover:text-white px-3 py-1 rounded text-sm transition-all duration-150 hover:opacity-80 active:scale-90 active:opacity-60 select-none"
         >
           Maybe Later
         </button>
