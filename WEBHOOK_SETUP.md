@@ -82,11 +82,18 @@ class WebhookHandler(BaseHTTPRequestHandler):
                         "./server/requirements.txt"
                     ], check=True)
 
-                    # Install frontend dependencies
+                    # Install frontend dependencies and build for production
                     subprocess.run(["npm", "ci"], cwd="./client", check=True)
 
-                    # Restart PM2 services
-                    subprocess.run(["pm2", "restart", "ecosystem.config.js"], check=True)
+                    # Build frontend with production environment variables
+                    subprocess.run(["npm", "run", "build"], cwd="./client", check=True, env={
+                        **os.environ,
+                        "NODE_ENV": "production",
+                        "VITE_API_BASE_URL": "https://aquariangnosis.org:5040/api/v1"
+                    })
+
+                    # Restart PM2 services with production environment
+                    subprocess.run(["pm2", "restart", "ecosystem.config.js", "--env", "production"], check=True)
 
                     print("Deployment completed successfully")
 

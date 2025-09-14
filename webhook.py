@@ -25,8 +25,11 @@ class WebhookHandler(BaseHTTPRequestHandler):
                     os.chdir("client")
                     subprocess.run(["npm", "install"])
 
-                    # 3. Build production frontend
-                    subprocess.run(["npm", "run", "build"])
+                    # 3. Build production frontend with environment variables
+                    build_env = os.environ.copy()
+                    build_env["NODE_ENV"] = "production"
+                    build_env["VITE_API_BASE_URL"] = "https://aquariangnosis.org:5040/api/v1"
+                    subprocess.run(["npm", "run", "build"], env=build_env)
                     os.chdir("..")
 
                     # 4. PM2 restart with production environment
