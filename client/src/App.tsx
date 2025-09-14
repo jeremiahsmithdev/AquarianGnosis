@@ -42,8 +42,6 @@ function AppContent() {
     setSelectedUser
   } = useNavigationStore();
 
-  // Check if BETA mode is enabled
-  const isBetaMode = import.meta.env.BETA === 'true';
 
   useEffect(() => {
     // Check authentication status on app load
@@ -53,12 +51,6 @@ function AppContent() {
     }
   }, [getCurrentUser]);
 
-  useEffect(() => {
-    // In BETA mode, redirect to auth if not authenticated and not already on auth page
-    if (isBetaMode && !isAuthenticated && location.pathname !== '/auth') {
-      navigate('/auth');
-    }
-  }, [isBetaMode, isAuthenticated, location.pathname, navigate]);
 
   const handleNavigate = (page: string) => {
     setIsNavigating(true);

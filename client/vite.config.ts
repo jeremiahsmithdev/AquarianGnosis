@@ -5,9 +5,6 @@ import { resolve } from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  define: {
-    'import.meta.env.BETA': JSON.stringify(process.env.BETA || 'false'),
-  },
   plugins: [
     react(),
     VitePWA({
