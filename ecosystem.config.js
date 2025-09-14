@@ -36,7 +36,7 @@ module.exports = {
       env_production: {
         NODE_ENV: 'production',
         PORT: 3000,
-        VITE_API_BASE_URL: 'https://aquariangnosis.org/api/v1'
+        VITE_API_BASE_URL: 'https://aquariangnosis.org:5040/api/v1'
       },
       instances: 1,
       autorestart: true,
