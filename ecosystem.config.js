@@ -27,7 +27,7 @@ module.exports = {
       name: 'aquarian-gnosis-frontend',
       cwd: './client',
       script: 'npm',
-      args: 'run dev',
+      args: process.env.NODE_ENV === 'production' ? 'run preview' : 'run dev',
       env: {
         NODE_ENV: 'development',
         PORT: 3000,

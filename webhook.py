@@ -24,9 +24,12 @@ class WebhookHandler(BaseHTTPRequestHandler):
                     subprocess.run(["./server/venv/bin/pip", "install", "-r", "./server/requirements.txt"])
                     os.chdir("client")
                     subprocess.run(["npm", "install"])
+
+                    # 3. Build production frontend
+                    subprocess.run(["npm", "run", "build"])
                     os.chdir("..")
-                    
-                    # 3. PM2 restart
+
+                    # 4. PM2 restart
                     subprocess.run(["pm2", "restart", "ecosystem.config.js"])
                     
                     self.send_response(200)

@@ -57,7 +57,59 @@ The project uses `ecosystem.config.js` which defines:
 
 ### Port Configuration
 - Frontend: `localhost:3000` (managed by PM2)
-- Backend: `localhost:8000` (managed by PM2)
+- Backend: `localhost:5040` (managed by PM2)
+
+---
+
+## 🚀 Production Deployment (Oracle Server)
+
+**Production Server**: `opc@oracle`
+**Production Path**: `/opt/aquariangnosis`
+
+### Production Deployment Process
+
+The production deployment is automated via GitHub webhook:
+
+1. **Webhook URL**: `https://aquariangnosis.org:9000/webhook`
+2. **Webhook Script**: `webhook.py` (runs on port 9000)
+3. **Automatic Steps on Git Push to Master**:
+   - Git pull latest changes
+   - Install Python dependencies (`pip install -r requirements.txt`)
+   - Install Node dependencies (`npm install`)
+   - **Build production frontend** (`npm run build`)
+   - Restart PM2 services (`pm2 restart ecosystem.config.js`)
+
+### Production Environment Variables
+
+Production uses different configuration:
+- `NODE_ENV=production`
+- `VITE_API_BASE_URL=https://aquariangnosis.org/api/v1`
+- Frontend serves via `npm run preview` (built files)
+
+### Manual Production Commands
+
+**Only use these if webhook fails:**
+
+```bash
+# SSH to production
+ssh opc@oracle
+
+# Navigate to project
+cd /opt/aquariangnosis
+
+# Manual deployment steps
+git pull
+./server/venv/bin/pip install -r ./server/requirements.txt
+cd client && npm install && npm run build && cd ..
+pm2 restart ecosystem.config.js --env production
+```
+
+### Production PWA Notes
+
+- Production builds generate proper service worker and manifest files
+- PWA install should work correctly after `npm run build`
+- Manifest served at: `https://aquariangnosis.org/manifest.webmanifest`
+- Service worker at: `https://aquariangnosis.org/sw.js`
 
 ### PM2 Troubleshooting
 
