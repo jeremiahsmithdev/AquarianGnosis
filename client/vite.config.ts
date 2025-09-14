@@ -17,13 +17,9 @@ export default defineConfig({
         runtimeCaching: [
           {
             urlPattern: /^https?:\/\/(localhost:5040|aquariangnosis\.org)\/api\//,
-            handler: 'NetworkFirst',
+            handler: 'NetworkOnly',
             options: {
-              cacheName: 'api-cache',
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24
-              }
+              cacheName: 'api-cache'
             }
           },
           {
