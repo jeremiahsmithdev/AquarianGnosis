@@ -1,0 +1,17 @@
+{
+  "apps": [{
+    "name": "promtail-aquaria",
+    "script": "promtail",
+    "args": "--config.file=promtail-config.yaml",
+    "cwd": "/Users/admin/dev/AquarianGnosis",
+    "autorestart": true,
+    "watch": false,
+    "env": {
+      "NODE_ENV": "development"
+    },
+    "error_file": "./logs/promtail-error.log",
+    "out_file": "./logs/promtail-out.log",
+    "log_file": "./logs/promtail-combined.log",
+    "time": true
+  }]
+}

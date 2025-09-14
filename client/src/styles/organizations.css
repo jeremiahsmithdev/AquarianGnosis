@@ -21,6 +21,7 @@
 
 .organizations-tabs {
   display: flex;
+  justify-content: center;
   margin-bottom: 30px;
   border-bottom: 1px solid #e0e0e0;
 }
@@ -51,12 +52,15 @@
 }
 
 .organizations-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 20px;
+  justify-content: center;
 }
 
 .organization-item {
+  flex: 0 0 300px;
+  max-width: 300px;
   background-color: white;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -99,4 +103,13 @@
 
 .visit-button:hover {
   background-color: #219653;
+}
+
+.development-message {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.development-message p {
+  font-style: italic;
 }

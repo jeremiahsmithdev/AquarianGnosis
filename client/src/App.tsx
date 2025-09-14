@@ -10,6 +10,7 @@ import { StudyGroupPage } from './pages/StudyGroupPage';
 import { ResourcesPage } from './pages/ResourcesPage';
 import { OrganizationsPage } from './pages/OrganizationsPage';
 import { MessagingPage } from './pages/MessagingPage';
+import { VideoPage } from './pages/VideoPage';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import './App.css';
 import './styles/landing.css';
@@ -122,6 +123,10 @@ function AppContent() {
             initialRecipientId={selectedUser?.id}
             initialRecipientUsername={selectedUser?.username}
           />
+        } />
+
+        <Route path="/video" element={
+          <VideoPage onNavigate={handleNavigate} />
         } />
       </Routes>
     </div>

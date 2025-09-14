@@ -11,8 +11,9 @@ export const CommunityPage: React.FC<{ onNavigate: (page: string) => void }> = (
   const [activeTab, setActiveTab] = useState<'forum' | 'study-groups'>('forum');
   const [categories, setCategories] = useState<ForumCategory[]>([]);
   const [studyGroups, setStudyGroups] = useState<StudyGroup[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [apiAvailable, setApiAvailable] = useState(true);
   
   // Forum state
   const [newCategoryName, setNewCategoryName] = useState('');
@@ -28,6 +29,20 @@ export const CommunityPage: React.FC<{ onNavigate: (page: string) => void }> = (
   const [newGroupDescription, setNewGroupDescription] = useState('');
   const [showGroupForm, setShowGroupForm] = useState(false);
 
+  // Static fallback content when API is not available
+  const staticContent = {
+    forumCategories: [
+      { id: 'static-1', name: 'General Discussion', description: 'General topics about gnostic teachings and philosophy', threads: [] },
+      { id: 'static-2', name: 'Study Materials', description: 'Share and discuss study materials, books, and resources', threads: [] },
+      { id: 'static-3', name: 'Meditation & Practice', description: 'Discuss meditation techniques and spiritual practices', threads: [] }
+    ],
+    studyGroups: [
+      { id: 'static-1', name: 'Beginners Study Circle', description: 'A welcoming group for those new to gnostic studies', members: [], max_members: 12, is_public: true },
+      { id: 'static-2', name: 'Advanced Teachings Group', description: 'Deep dive into advanced gnostic concepts and practices', members: [], max_members: 8, is_public: true },
+      { id: 'static-3', name: 'Meditation Practice Group', description: 'Regular meditation sessions and technique sharing', members: [], max_members: 15, is_public: true }
+    ]
+  };
+
   useEffect(() => {
     if (activeTab === 'forum') {
       loadCategories();
@@ -42,9 +57,13 @@ export const CommunityPage: React.FC<{ onNavigate: (page: string) => void }> = (
       const data = await getCategories();
       setCategories(data);
       setError(null);
+      setApiAvailable(true);
     } catch (err) {
-      setError('Failed to load categories');
-      console.error(err);
+      // API not available - use placeholder content
+      setApiAvailable(false);
+      setCategories([]);
+      setError(null);
+      console.warn('Community API not available - using static content only');
     } finally {
       setLoading(false);
     }
@@ -56,9 +75,13 @@ export const CommunityPage: React.FC<{ onNavigate: (page: string) => void }> = (
       const data = await getStudyGroups();
       setStudyGroups(data);
       setError(null);
+      setApiAvailable(true);
     } catch (err) {
-      setError('Failed to load study groups');
-      console.error(err);
+      // API not available - use placeholder content
+      setApiAvailable(false);
+      setStudyGroups([]);
+      setError(null);
+      console.warn('Study Groups API not available - using static content only');
     } finally {
       setLoading(false);
     }
@@ -192,8 +215,8 @@ export const CommunityPage: React.FC<{ onNavigate: (page: string) => void }> = (
           <div className="categories-section">
             <div className="section-header">
               <h2>Forum Categories</h2>
-              {isAuthenticated && (
-                <button 
+              {isAuthenticated && apiAvailable && (
+                <button
                   onClick={() => setShowCategoryForm(!showCategoryForm)}
                   className="create-category-button"
                 >
@@ -202,7 +225,13 @@ export const CommunityPage: React.FC<{ onNavigate: (page: string) => void }> = (
               )}
             </div>
 
-            {showCategoryForm && (
+            {!apiAvailable && (
+              <div className="api-notice">
+                <p><em>Community features are currently in development. Below are examples of planned functionality.</em></p>
+              </div>
+            )}
+
+            {showCategoryForm && apiAvailable && (
               <div className="category-form">
                 <h3>Create New Category</h3>
                 <input
@@ -225,14 +254,15 @@ export const CommunityPage: React.FC<{ onNavigate: (page: string) => void }> = (
             )}
 
             <div className="categories-list">
-              {categories.map(category => (
-                <div 
-                  key={category.id} 
+              {(apiAvailable ? categories : staticContent.forumCategories).map(category => (
+                <div
+                  key={category.id}
                   className="category-item"
-                  onClick={() => {
+                  onClick={apiAvailable ? () => {
                     setSelectedCategory(category);
                     setShowThreadForm(true);
-                  }}
+                  } : undefined}
+                  style={!apiAvailable ? { cursor: 'default' } : undefined}
                 >
                   <h3>{category.name}</h3>
                   <p>{category.description}</p>
@@ -280,8 +310,8 @@ export const CommunityPage: React.FC<{ onNavigate: (page: string) => void }> = (
         <div className="study-groups-content">
           <div className="section-header">
             <h2>Available Study Groups</h2>
-            {isAuthenticated && (
-              <button 
+            {isAuthenticated && apiAvailable && (
+              <button
                 onClick={() => setShowGroupForm(!showGroupForm)}
                 className="create-group-button"
               >
@@ -290,7 +320,13 @@ export const CommunityPage: React.FC<{ onNavigate: (page: string) => void }> = (
             )}
           </div>
 
-          {showGroupForm && (
+          {!apiAvailable && (
+            <div className="api-notice">
+              <p><em>Community features are currently in development. Below are examples of planned functionality.</em></p>
+            </div>
+          )}
+
+          {showGroupForm && apiAvailable && (
             <div className="group-form">
               <h3>Create New Study Group</h3>
               <input
@@ -313,7 +349,7 @@ export const CommunityPage: React.FC<{ onNavigate: (page: string) => void }> = (
           )}
 
           <div className="study-groups-list">
-            {studyGroups.map(group => (
+            {(apiAvailable ? studyGroups : staticContent.studyGroups).map(group => (
               <div key={group.id} className="study-group-item">
                 <h3>{group.name}</h3>
                 <p>{group.description}</p>
@@ -322,8 +358,8 @@ export const CommunityPage: React.FC<{ onNavigate: (page: string) => void }> = (
                   <span>Max: {group.max_members} members</span>
                   <span>{group.is_public ? 'Public' : 'Private'}</span>
                 </div>
-                {isAuthenticated && (
-                  <button 
+                {isAuthenticated && apiAvailable && (
+                  <button
                     onClick={() => handleJoinGroup(group.id)}
                     className="join-button"
                   >

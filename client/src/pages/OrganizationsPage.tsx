@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigationStore } from '../stores/navigationStore';
 
 export const OrganizationsPage: React.FC<{ onNavigate: (page: string) => void }> = ({ onNavigate }) => {
-  const { setIsNavigating } = useNavigationStore();
-  const [activeTab, setActiveTab] = useState<'major' | 'local' | 'independent'>('major');
+  const { setIsNavigating, tabStates, setOrganizationsTab } = useNavigationStore();
+
+  const activeTab = tabStates.organizations;
 
   const organizations = {
     major: [
-      { id: 1, name: "Glorian Association", location: "International", description: "Official organization for Samael Aun Weor's teachings" },
-      { id: 2, name: "Koradi Community", location: "International", description: "Community focused on practical gnostic teachings" },
-      { id: 3, name: "Aquarian Gnosis Foundation", location: "International", description: "Dedicated to uniting gnostic traditions" }
+      { id: 1, name: "Glorian", location: "International", description: "Official organization for Samael Aun Weor's teachings", url: "https://glorian.org/" },
+      { id: 2, name: "AGEAC", location: "International", description: "Gnostic Cultural Association of Anthropological Studies", url: "https://ageac.org/en/" },
+      { id: 3, name: "Samael Lakshmi", location: "International", description: "Gnostic teachings and spiritual development", url: "https://aeon13.org/" },
+      { id: 4, name: "The New Gnostic Society Samael Aun Weor", location: "International", description: "Gnostic Society for Samael Aun Weor's teachings", url: "https://gnosistr.com" },
+      { id: 5, name: "Koradi Radio", location: "International", description: "Community focused on practical gnostic teachings", url: "https://koradi.org/en/" },
+      { id: 6, name: "Chicago Gnosis", location: "Chicago, USA", description: "Gnostic teachings and study groups in Chicago", url: "https://chicagognosis.org" }
     ],
     local: [
       { id: 1, name: "Gnostic Study Center - New York", location: "New York, USA", description: "Local study group and meditation center" },
@@ -32,34 +36,45 @@ export const OrganizationsPage: React.FC<{ onNavigate: (page: string) => void }>
       </div>
 
       <div className="organizations-tabs">
-        <button 
+        <button
           className={activeTab === 'major' ? 'tab active' : 'tab'}
-          onClick={() => setActiveTab('major')}
+          onClick={() => setOrganizationsTab('major')}
         >
           Major Organizations
         </button>
-        <button 
+        <button
           className={activeTab === 'local' ? 'tab active' : 'tab'}
-          onClick={() => setActiveTab('local')}
+          onClick={() => setOrganizationsTab('local')}
         >
           Local Centers
         </button>
-        <button 
+        <button
           className={activeTab === 'independent' ? 'tab active' : 'tab'}
-          onClick={() => setActiveTab('independent')}
+          onClick={() => setOrganizationsTab('independent')}
         >
           Independent Groups
         </button>
       </div>
 
       <div className="organizations-content">
+        {(activeTab === 'local' || activeTab === 'independent') && (
+          <div className="development-message">
+            <p>Organization listings for {activeTab === 'local' ? 'local centers' : 'independent groups'} are currently in development. Below are examples of planned functionality.</p>
+          </div>
+        )}
         <div className="organizations-list">
           {organizations[activeTab].map(org => (
             <div key={org.id} className="organization-item">
               <h3>{org.name}</h3>
               <p className="organization-location">{org.location}</p>
               <p className="organization-description">{org.description}</p>
-              <button className="visit-button">Visit Website</button>
+              {(org as any).url ? (
+                <a href={(org as any).url} target="_blank" rel="noopener noreferrer">
+                  <button className="visit-button">Visit Website</button>
+                </a>
+              ) : (
+                <button className="visit-button" disabled>Visit Website</button>
+              )}
             </div>
           ))}
         </div>

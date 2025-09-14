@@ -1,18 +1,26 @@
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 
-export type PageType = 'landing' | 'auth' | 'map' | 'resources' | 'organizations' | 'community' | 'messages';
+export type PageType = 'landing' | 'auth' | 'map' | 'resources' | 'organizations' | 'community' | 'messages' | 'video';
 
 interface NavigationState {
   currentPage: PageType;
   selectedUser: { id: string; username: string } | null;
   isNavigating: boolean;
-  
+
+  // Tab states for pages with tabs
+  tabStates: {
+    resources: 'shared' | 'blogs' | 'books' | 'video' | 'audio';
+    organizations: 'major' | 'local' | 'independent';
+  };
+
   // Actions
   setCurrentPage: (page: PageType) => void;
   setSelectedUser: (user: { id: string; username: string } | null) => void;
   setIsNavigating: (navigating: boolean) => void;
-  
+  setResourcesTab: (tab: 'shared' | 'blogs' | 'books' | 'video' | 'audio') => void;
+  setOrganizationsTab: (tab: 'major' | 'local' | 'independent') => void;
+
   // Navigation helpers
   navigateToPage: (page: PageType) => void;
   navigateToMessages: (user: { id: string; username: string }) => void;
@@ -20,16 +28,27 @@ interface NavigationState {
 
 export const useNavigationStore = create<NavigationState>()(
   devtools(
-    (set, get) => ({
+    persist(
+      (set, get) => ({
       // Initial state
       currentPage: 'landing',
       selectedUser: null,
       isNavigating: false,
+      tabStates: {
+        resources: 'blogs',
+        organizations: 'major',
+      },
 
       // Basic setters
       setCurrentPage: (page) => set({ currentPage: page }),
       setSelectedUser: (user) => set({ selectedUser: user }),
       setIsNavigating: (navigating) => set({ isNavigating: navigating }),
+      setResourcesTab: (tab) => set((state) => ({
+        tabStates: { ...state.tabStates, resources: tab }
+      })),
+      setOrganizationsTab: (tab) => set((state) => ({
+        tabStates: { ...state.tabStates, organizations: tab }
+      })),
 
       // Navigation actions
       navigateToPage: (page) => {
@@ -57,7 +76,12 @@ export const useNavigationStore = create<NavigationState>()(
           set({ isNavigating: false });
         }, 100);
       },
-    }),
+      }),
+      {
+        name: 'navigation-storage',
+        partialize: (state) => ({ tabStates: state.tabStates }), // Only persist tab states
+      }
+    ),
     { name: 'navigation-store' }
   )
 );
@@ -72,6 +96,7 @@ export const getPagePath = (page: PageType): string => {
     case 'organizations': return '/organizations';
     case 'community': return '/community';
     case 'messages': return '/messages';
+    case 'video': return '/video';
     default: return '/';
   }
 };
@@ -86,6 +111,7 @@ export const getPageFromPath = (path: string): PageType => {
     case '/organizations': return 'organizations';
     case '/community': return 'community';
     case '/messages': return 'messages';
+    case '/video': return 'video';
     default: return 'landing';
   }
 };
