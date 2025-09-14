@@ -10,7 +10,7 @@ interface NavigationState {
 
   // Tab states for pages with tabs
   tabStates: {
-    resources: 'shared' | 'blogs' | 'books' | 'video' | 'audio';
+    resources: 'blogs' | 'books' | 'video' | 'audio' | 'art';
     organizations: 'major' | 'local' | 'independent';
   };
 
@@ -18,7 +18,7 @@ interface NavigationState {
   setCurrentPage: (page: PageType) => void;
   setSelectedUser: (user: { id: string; username: string } | null) => void;
   setIsNavigating: (navigating: boolean) => void;
-  setResourcesTab: (tab: 'shared' | 'blogs' | 'books' | 'video' | 'audio') => void;
+  setResourcesTab: (tab: 'blogs' | 'books' | 'video' | 'audio' | 'art') => void;
   setOrganizationsTab: (tab: 'major' | 'local' | 'independent') => void;
 
   // Navigation helpers

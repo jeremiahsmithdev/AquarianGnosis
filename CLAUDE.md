@@ -1,5 +1,27 @@
 # CLAUDE.md - Development Guidelines & Technical Debt Analysis
 
+## TODO: Shared Resources Implementation
+
+**IMPORTANT**: The Resources page shared resources functionality has been refactored (2025-01-XX):
+
+- **Removed**: Standalone "Shared Resources" tab
+- **Added**: Integrated shared resource forms within each existing tab (blogs, books, video, audio, art)
+- **Functionality**:
+  - When user is authenticated and API is available, each tab shows a "Share [TabType]" button
+  - Form allows users to add community-contributed resources of that specific type
+  - Shared resources appear alongside static content within each tab
+  - Resources are filtered by `resource_type` matching the active tab
+  - Art tab displays shared resources as images in the art gallery layout
+  - Other tabs display shared resources as standard resource cards with voting UI
+
+**Files Modified**:
+- `client/src/pages/ResourcesPage.tsx:17,95-156,294-469` - Refactored shared resource functionality
+- `client/src/stores/navigationStore.ts:13,21` - Removed 'shared' from resources tab types
+
+**Next Steps**: Test the implementation with authenticated users to ensure resource creation and filtering works correctly.
+
+---
+
 ## Project Overview
 This document serves as the central reference for Claude Code when working on the Aquarian Gnosis project. It contains architecture guidelines, identified technical debt, improvement roadmaps, and maintenance instructions.
 
