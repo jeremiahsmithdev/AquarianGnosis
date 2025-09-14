@@ -8,12 +8,12 @@ export const OrganizationsPage: React.FC<{ onNavigate: (page: string) => void }>
 
   const organizations = {
     major: [
-      { id: 1, name: "Glorian", location: "International", description: "Official organization for Samael Aun Weor's teachings", url: "https://glorian.org/" },
-      { id: 2, name: "AGEAC", location: "International", description: "Gnostic Cultural Association of Anthropological Studies", url: "https://ageac.org/en/" },
-      { id: 3, name: "Samael Lakshmi", location: "International", description: "Gnostic teachings and spiritual development", url: "https://aeon13.org/" },
+      { id: 1, name: "Glorian", location: "International", description: "Glorian is a non-profit charitable organization originally founded to publish the books of Samael Aun Weor", url: "https://glorian.org/" },
+      { id: 2, name: "AGEAC", location: "International", description: "Geophilosophical Association of Anthropological and Cultural Studies", url: "https://ageac.org/en/" },
+      { id: 3, name: "Samael Lakshmi", location: "International", description: "The Samael Lakhsmi Gnostic Cultural Association is an international NGO based in Greece.", url: "https://aeon13.org/" },
       { id: 4, name: "The New Gnostic Society Samael Aun Weor", location: "International", description: "Gnostic Society for Samael Aun Weor's teachings", url: "https://gnosistr.com" },
-      { id: 5, name: "Koradi Radio", location: "International", description: "Community focused on practical gnostic teachings", url: "https://koradi.org/en/" },
-      { id: 6, name: "Chicago Gnosis", location: "Chicago, USA", description: "Gnostic teachings and study groups in Chicago", url: "https://chicagognosis.org" }
+      { id: 5, name: "Koradi Radio", location: "International", description: "Listen to your favourite gnostic missionary live!", url: "https://koradi.org/en/" },
+      { id: 6, name: "The Gnostic Academy of Chicago", location: "Chicago, USA", description: "The Gnostic Academy of Chicago (a non-profit organization) provides podcasts, courses, lectures, transcriptions, articles, scriptures, workshops, retreats, and classes.", url: "https://chicagognosis.org" }
     ],
     local: [
       { id: 1, name: "Gnostic Study Center - New York", location: "New York, USA", description: "Local study group and meditation center" },
