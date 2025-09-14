@@ -36,26 +36,6 @@ export default function PWAInstallPrompt() {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     window.addEventListener('appinstalled', handleAppInstalled)
 
-    // Development mode: Show install prompt after 2 seconds for testing
-    if (import.meta.env.DEV) {
-      const devTimer = setTimeout(() => {
-        setIsVisible(true)
-        // Create a mock prompt for development
-        setDeferredPrompt({
-          prompt: async () => console.log('Mock PWA install triggered'),
-          userChoice: Promise.resolve({ outcome: 'accepted' as const, platform: 'web' }),
-          platforms: ['web'],
-          preventDefault: () => {},
-          type: 'beforeinstallprompt'
-        } as BeforeInstallPromptEvent)
-      }, 2000)
-
-      return () => {
-        window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-        window.removeEventListener('appinstalled', handleAppInstalled)
-        clearTimeout(devTimer)
-      }
-    }
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
