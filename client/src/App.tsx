@@ -89,14 +89,10 @@ function AppContent() {
 
       <Routes>
         <Route path="/" element={
-          (isBetaMode && !isAuthenticated) ? (
-            <AuthPage onSuccess={handleAuthSuccess} />
-          ) : (
-            <LandingPage
-              onNavigate={handleNavigate}
-              onAuthClick={() => handleNavigate('auth')}
-            />
-          )
+          <LandingPage
+            onNavigate={handleNavigate}
+            onAuthClick={() => handleNavigate('auth')}
+          />
         } />
         
         <Route path="/auth" element={<AuthPage onSuccess={handleAuthSuccess} />} />
