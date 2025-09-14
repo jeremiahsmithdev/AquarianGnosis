@@ -5,10 +5,16 @@ import { resolve } from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
+  define: {
+    'import.meta.env.BETA': JSON.stringify(process.env.BETA || 'false'),
+  },
   plugins: [
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      devOptions: {
+        enabled: true
+      },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         runtimeCaching: [
@@ -38,30 +44,56 @@ export default defineConfig({
       },
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'Aquarian Gnosis',
-        short_name: 'AquarianGnosis',
-        description: 'Gnostic Community Platform',
+        name: 'Aquarian Gnosis - Gnostic Community Platform',
+        short_name: 'Aquarian Gnosis',
+        description: 'A unified platform for seekers of gnosis to connect, share resources, and form study groups worldwide',
         theme_color: '#3b82f6',
-        background_color: '#ffffff',
+        background_color: '#0f1419',
         display: 'standalone',
+        orientation: 'portrait-primary',
         scope: '/',
-        start_url: '/',
+        start_url: '/?source=pwa',
+        categories: ['education', 'social', 'lifestyle'],
+        lang: 'en',
         icons: [
+          {
+            src: 'favicon.ico',
+            sizes: '48x48',
+            type: 'image/x-icon'
+          },
           {
             src: 'pwa-192x192.png',
             sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any'
           },
           {
             src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable'
+            purpose: 'any'
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
+          },
+          {
+            src: 'apple-touch-icon.png',
+            sizes: '180x180',
+            type: 'image/png',
+            purpose: 'any'
+          }
+        ],
+        screenshots: [
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable',
+            form_factor: 'wide',
+            label: 'Aquarian Gnosis Platform'
           }
         ]
       }
@@ -70,7 +102,14 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true,
-    allowedHosts: ['localhost', '127.0.0.1', 'macbook', 'oracle', 'aquariangnosis.org', 'www.aquariangnosis.org']
+    allowedHosts: ['localhost', '127.0.0.1', 'macbook', 'oracle', 'aquariangnosis.org', 'www.aquariangnosis.org'],
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5040',
+        changeOrigin: true,
+        secure: false
+      }
+    }
   },
   resolve: {
     alias: {
