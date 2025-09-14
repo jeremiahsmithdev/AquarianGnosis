@@ -16,7 +16,7 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         runtimeCaching: [
           {
-            urlPattern: /^https?:\/\/(localhost:5040|aquariangnosis\.org)\/api\//,
+            urlPattern: /^https?:\/\/(localhost:5040|aquariangnosis\.org:5040|aquariangnosis\.org)\/api\//,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-cache',
