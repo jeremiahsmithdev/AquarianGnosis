@@ -14,6 +14,12 @@ export default function PWAInstallPrompt() {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
+    // Check if app is already installed
+    if (window.matchMedia('(display-mode: standalone)').matches ||
+        (window.navigator as any).standalone === true) {
+      return
+    }
+
     const handleBeforeInstallPrompt = (e: Event) => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault()
@@ -22,7 +28,13 @@ export default function PWAInstallPrompt() {
       setIsVisible(true)
     }
 
+    const handleAppInstalled = () => {
+      setIsVisible(false)
+      setDeferredPrompt(null)
+    }
+
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    window.addEventListener('appinstalled', handleAppInstalled)
 
     // Development mode: Show install prompt after 2 seconds for testing
     if (import.meta.env.DEV) {
@@ -40,33 +52,38 @@ export default function PWAInstallPrompt() {
 
       return () => {
         window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+        window.removeEventListener('appinstalled', handleAppInstalled)
         clearTimeout(devTimer)
       }
     }
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+      window.removeEventListener('appinstalled', handleAppInstalled)
     }
   }, [])
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) return
 
-    // Show the prompt
-    deferredPrompt.prompt()
+    try {
+      // Show the prompt
+      await deferredPrompt.prompt()
 
-    // Wait for the user to respond to the prompt
-    const { outcome } = await deferredPrompt.userChoice
+      // Wait for the user to respond to the prompt
+      const { outcome } = await deferredPrompt.userChoice
 
-    if (outcome === 'accepted') {
-      console.log('User accepted the PWA install prompt')
-    } else {
-      console.log('User dismissed the PWA install prompt')
+      console.log(`PWA install prompt result: ${outcome}`)
+
+      // Always clear the prompt and hide the button after interaction
+      setDeferredPrompt(null)
+      setIsVisible(false)
+    } catch (error) {
+      console.error('Error during PWA install:', error)
+      // Still hide the prompt even if there's an error
+      setDeferredPrompt(null)
+      setIsVisible(false)
     }
-
-    // Clear the deferredPrompt and hide the button
-    setDeferredPrompt(null)
-    setIsVisible(false)
   }
 
   const handleDismiss = () => {
