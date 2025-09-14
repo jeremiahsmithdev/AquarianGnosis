@@ -44,7 +44,7 @@ export default defineConfig({
         name: 'Aquarian Gnosis - Gnostic Community Platform',
         short_name: 'Aquarian Gnosis',
         description: 'A unified platform for seekers of gnosis to connect, share resources, and form study groups worldwide',
-        theme_color: '#3b82f6',
+        theme_color: '#000000',
         background_color: '#0f1419',
         display: 'standalone',
         orientation: 'portrait-primary',

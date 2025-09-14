@@ -4,6 +4,7 @@ RESOURCES
 # Dependencies
 node_modules/
 */node_modules/
+GRAFANA
 
 # Environment variables
 .env
