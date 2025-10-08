@@ -78,6 +78,10 @@ function AppContent() {
 
   return (
     <div className="app">
+      <div className="dev-disclaimer">
+        <p>Coming soon!</p>
+        <p>This site is in active development</p>
+      </div>
       <RouterSync />
       <PWAInstallPrompt />
 

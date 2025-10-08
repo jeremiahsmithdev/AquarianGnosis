@@ -75,3 +75,24 @@
     transform: scaleX(1);
   }
 }
+
+/* Development Disclaimer Banner */
+.dev-disclaimer {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.95);
+  padding: 8px 16px;
+  text-align: center;
+}
+
+.dev-disclaimer p {
+  margin: 2px 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dev-disclaimer p:first-child {
+  font-weight: 700;
+  font-size: 15px;
+}
