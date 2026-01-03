@@ -1,0 +1,248 @@
+/**
+ * About Page Styles
+ * PDF-like document viewer with traditional typography
+ */
+
+.about-page {
+  min-height: 100vh;
+  background: #525659;
+  display: flex;
+  flex-direction: column;
+}
+
+.about-page .page-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background: #323639;
+  border-bottom: 1px solid #222;
+}
+
+.about-page .page-header h1 {
+  color: #ccc;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.about-page .back-button {
+  background: transparent;
+  border: 1px solid #666;
+  color: #ccc;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.about-page .back-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #888;
+  color: #fff;
+}
+
+.about-content {
+  max-width: 816px;
+  margin: 32px auto;
+  padding: 72px 96px;
+  background: #fff;
+  color: #1a1a1a;
+  line-height: 1.7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.about-header {
+  text-align: center;
+  margin-bottom: 48px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid #ddd;
+}
+
+.about-header h2 {
+  font-size: 28px;
+  font-weight: 400;
+  color: #111;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.3px;
+}
+
+.about-subtitle {
+  font-size: 16px;
+  color: #555;
+  margin: 0;
+}
+
+.wisdom-line {
+  text-align: center;
+  font-size: 15px;
+  color: #444;
+  margin-bottom: 48px;
+}
+
+.featured-quote {
+  margin: 40px 48px;
+  padding: 0;
+  text-align: center;
+}
+
+.featured-quote p {
+  font-size: 18px;
+  font-style: italic;
+  color: #222;
+  margin: 0 0 12px 0;
+  line-height: 1.6;
+}
+
+.featured-quote cite {
+  font-size: 14px;
+  color: #666;
+  font-style: normal;
+}
+
+.about-section {
+  margin-bottom: 40px;
+}
+
+.about-section h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111;
+  margin: 0 0 16px 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.about-section h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+  margin: 28px 0 12px 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.about-section p {
+  font-size: 15px;
+  color: #333;
+  margin: 0 0 14px 0;
+  text-align: justify;
+}
+
+.about-section ul {
+  margin: 14px 0;
+  padding-left: 24px;
+}
+
+.about-section li {
+  font-size: 15px;
+  color: #333;
+  margin-bottom: 10px;
+  line-height: 1.65;
+}
+
+.about-section blockquote {
+  margin: 24px 32px;
+  padding: 0;
+}
+
+.about-section blockquote p {
+  font-size: 15px;
+  font-style: italic;
+  color: #444;
+  margin: 0 0 6px 0;
+  text-align: left;
+}
+
+.about-section blockquote cite {
+  font-size: 13px;
+  color: #666;
+  font-style: normal;
+}
+
+.about-section.invitation {
+  margin-top: 48px;
+  padding-top: 40px;
+  border-top: 1px solid #ddd;
+}
+
+.blessing {
+  font-size: 15px;
+  font-style: italic;
+  color: #333;
+  margin-top: 28px;
+  text-align: center;
+}
+
+.about-footer {
+  margin-top: 56px;
+  padding-top: 32px;
+  border-top: 1px solid #ddd;
+  text-align: center;
+}
+
+.about-footer .divider {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 16px;
+  letter-spacing: 8px;
+}
+
+.about-footer .site-name {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 4px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.about-footer .tagline {
+  font-size: 13px;
+  color: #666;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .about-content {
+    margin: 24px 16px;
+    padding: 48px 48px;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-page .page-header {
+    padding: 10px 16px;
+  }
+
+  .about-content {
+    margin: 16px 8px;
+    padding: 32px 24px;
+  }
+
+  .about-header h2 {
+    font-size: 22px;
+  }
+
+  .featured-quote {
+    margin: 32px 16px;
+  }
+
+  .featured-quote p {
+    font-size: 16px;
+  }
+
+  .about-section h3 {
+    font-size: 18px;
+  }
+
+  .about-section blockquote {
+    margin: 20px 16px;
+  }
+
+  .about-section p {
+    text-align: left;
+  }
+}

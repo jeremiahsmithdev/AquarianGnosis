@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
-export type PageType = 'landing' | 'auth' | 'map' | 'resources' | 'organizations' | 'community' | 'messages' | 'video';
+export type PageType = 'landing' | 'auth' | 'map' | 'resources' | 'organizations' | 'community' | 'messages' | 'video' | 'about';
 
 interface NavigationState {
   currentPage: PageType;
@@ -97,6 +97,7 @@ export const getPagePath = (page: PageType): string => {
     case 'community': return '/community';
     case 'messages': return '/messages';
     case 'video': return '/video';
+    case 'about': return '/about';
     default: return '/';
   }
 };
@@ -112,6 +113,7 @@ export const getPageFromPath = (path: string): PageType => {
     case '/community': return 'community';
     case '/messages': return 'messages';
     case '/video': return 'video';
+    case '/about': return 'about';
     default: return 'landing';
   }
 };

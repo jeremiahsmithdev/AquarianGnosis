@@ -22,6 +22,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onAuthClic
           <h1>Aquarian Gnosis</h1>
         </div>
         <div className="nav-links">
+          <button onClick={() => onNavigate('about')} className="nav-link">
+            About
+          </button>
           <button onClick={() => onNavigate('resources')} className="nav-link">
             Resources
           </button>
@@ -85,8 +88,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onAuthClic
 
           <div className="hero-description">
             <p>
-              Click on each quadrant of the Gnostic Cross to explore different sections 
+              Click on each quadrant of the Gnostic Cross to explore different sections
               of our community platform
+            </p>
+            <p className="mission-link">
+              <button onClick={() => onNavigate('about')} className="text-link">
+                Learn about our mission and philosophy →
+              </button>
             </p>
           </div>
         </div>
