@@ -53,23 +53,31 @@ class LocationBase(BaseModel):
     longitude: Decimal
     is_public: bool = True
     status: str = "permanent"
-    
+    visibility_type: str = "public"
+    allowed_users: Optional[List[str]] = None
+
     @validator('latitude')
     def validate_latitude(cls, v):
         if not -90 <= float(v) <= 90:
             raise ValueError('Latitude must be between -90 and 90')
         return v
-    
+
     @validator('longitude')
     def validate_longitude(cls, v):
         if not -180 <= float(v) <= 180:
             raise ValueError('Longitude must be between -180 and 180')
         return v
-    
+
     @validator('status')
     def validate_status(cls, v):
         if v not in ['permanent', 'traveling', 'nomadic']:
             raise ValueError('Status must be permanent, traveling, or nomadic')
+        return v
+
+    @validator('visibility_type')
+    def validate_visibility_type(cls, v):
+        if v not in ['public', 'members', 'custom']:
+            raise ValueError('Visibility type must be public, members, or custom')
         return v
 
 class LocationCreate(LocationBase):
@@ -80,17 +88,25 @@ class LocationUpdate(BaseModel):
     longitude: Optional[Decimal] = None
     is_public: Optional[bool] = None
     status: Optional[str] = None
-    
+    visibility_type: Optional[str] = None
+    allowed_users: Optional[List[str]] = None
+
     @validator('latitude')
     def validate_latitude(cls, v):
         if v is not None and not -90 <= float(v) <= 90:
             raise ValueError('Latitude must be between -90 and 90')
         return v
-    
+
     @validator('longitude')
     def validate_longitude(cls, v):
         if v is not None and not -180 <= float(v) <= 180:
             raise ValueError('Longitude must be between -180 and 180')
+        return v
+
+    @validator('visibility_type')
+    def validate_visibility_type(cls, v):
+        if v is not None and v not in ['public', 'members', 'custom']:
+            raise ValueError('Visibility type must be public, members, or custom')
         return v
 
 class LocationInDB(LocationBase):
@@ -104,6 +120,10 @@ class LocationInDB(LocationBase):
 
 class Location(LocationInDB):
     pass
+
+class LocationWithUser(Location):
+    """Location with username for map display"""
+    username: str
 
 # Message schemas
 class MessageBase(BaseModel):

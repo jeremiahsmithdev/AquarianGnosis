@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { InteractiveMap } from '../components/map/InteractiveMap';
+import React, { useEffect, useState } from 'react';
+import { InteractiveMap, LocationManager } from '../components/map';
 import { useMapStore } from '../stores/mapStore';
 import { useAuthStore } from '../stores/authStore';
 import '../styles/map.css';
@@ -10,14 +10,19 @@ interface MapPageProps {
 }
 
 export const MapPage: React.FC<MapPageProps> = ({ onNavigate, onUserSelect }) => {
-  const { 
-    mapStats, 
-    nearbyLocations, 
-    publicLocations, 
-    getMapStats 
+  const {
+    mapStats,
+    nearbyLocations,
+    publicLocations,
+    getMapStats
   } = useMapStore();
-  
+
   const { isAuthenticated } = useAuthStore();
+
+  // State for coordinating location selection between components
+  const [clickSelectMode, setClickSelectMode] = useState(false);
+  const [centerLocation, setCenterLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [onMapLocationSelected, setOnMapLocationSelected] = useState<((lat: number, lng: number) => void) | null>(null);
 
   useEffect(() => {
     getMapStats();
@@ -25,6 +30,30 @@ export const MapPage: React.FC<MapPageProps> = ({ onNavigate, onUserSelect }) =>
 
   const handleUserSelection = (userId: string) => {
     onUserSelect?.(userId);
+  };
+
+  // Called by LocationManager to enable map click selection
+  const handleEnableMapSelection = (callback: (lat: number, lng: number) => void) => {
+    setClickSelectMode(true);
+    setOnMapLocationSelected(() => callback);
+  };
+
+  // Called by LocationManager to disable map click selection
+  const handleDisableMapSelection = () => {
+    setClickSelectMode(false);
+    setOnMapLocationSelected(null);
+  };
+
+  // Called by InteractiveMap when map is clicked
+  const handleMapClick = (lat: number, lng: number) => {
+    if (onMapLocationSelected) {
+      onMapLocationSelected(lat, lng);
+    }
+  };
+
+  // Called by LocationManager when a search result is selected
+  const handleSearchLocationSelect = (lat: number, lng: number) => {
+    setCenterLocation({ lat, lng });
   };
 
   return (
@@ -85,9 +114,22 @@ export const MapPage: React.FC<MapPageProps> = ({ onNavigate, onUserSelect }) =>
 
       {/* Main Content */}
       <div className="map-content">
+        {/* Location Manager for authenticated users */}
+        {isAuthenticated && (
+          <LocationManager
+            onLocationAdded={() => getMapStats()}
+            onEnableMapSelection={handleEnableMapSelection}
+            onDisableMapSelection={handleDisableMapSelection}
+            onSearchLocationSelect={handleSearchLocationSelect}
+          />
+        )}
+
         <div className="map-area">
-          <InteractiveMap 
+          <InteractiveMap
             onUserSelect={handleUserSelection}
+            onMapClick={handleMapClick}
+            clickSelectMode={clickSelectMode}
+            centerLocation={centerLocation}
             height="600px"
           />
         </div>

@@ -35,6 +35,9 @@ export const useMapStore = create<MapState>()((set, get) => ({
     radius: 50,
     status: 'all',
     showOnlyPublic: false,
+    showUsers: true,
+    showStudyGroups: false, // Future feature
+    showGnosticCenters: false, // Future feature
   },
   isLoading: false,
   error: null,
@@ -49,15 +52,17 @@ export const useMapStore = create<MapState>()((set, get) => ({
 
   getUserLocation: async () => {
     set({ isLoading: true, error: null });
-    
+
     try {
       const location = await apiService.getUserLocation();
       set({ userLocation: location, isLoading: false });
     } catch (error: any) {
-      set({ 
-        error: error.message || 'Failed to get user location', 
+      // 404 means user hasn't set their location yet - not an error
+      const is404 = error.response?.status === 404;
+      set({
+        error: is404 ? null : (error.message || 'Failed to get user location'),
         isLoading: false,
-        userLocation: null 
+        userLocation: null
       });
     }
   },
@@ -122,14 +127,14 @@ export const useMapStore = create<MapState>()((set, get) => ({
 
   getNearbyLocations: async () => {
     set({ isLoading: true, error: null });
-    
+
     try {
-      const { radius } = get().filters;
-      const locations = await apiService.getNearbyLocations(radius);
+      const { radius, status } = get().filters;
+      const locations = await apiService.getNearbyLocations(radius, status);
       set({ nearbyLocations: locations, isLoading: false });
     } catch (error: any) {
-      set({ 
-        error: error.message || 'Failed to get nearby locations', 
+      set({
+        error: error.message || 'Failed to get nearby locations',
         isLoading: false,
         nearbyLocations: []
       });

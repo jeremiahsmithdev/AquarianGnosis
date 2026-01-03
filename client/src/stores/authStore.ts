@@ -26,20 +26,21 @@ export const useAuthStore = create<AuthState>()(
 
     login: async (credentials: LoginRequest) => {
       set({ isLoading: true, error: null });
-      
+
       try {
         await apiService.login(credentials);
         const user = await apiService.getCurrentUser();
-        
-        set({ 
-          user, 
-          isAuthenticated: true, 
+
+        set({
+          user,
+          isAuthenticated: true,
           isLoading: false,
-          error: null 
+          error: null
         });
       } catch (error: any) {
-        set({ 
-          error: error.message || 'Login failed', 
+        const errorMessage = error.response?.data?.detail || error.message || 'Login failed';
+        set({
+          error: errorMessage,
           isLoading: false,
           isAuthenticated: false,
           user: null
@@ -50,18 +51,19 @@ export const useAuthStore = create<AuthState>()(
 
     register: async (userData: RegisterRequest) => {
       set({ isLoading: true, error: null });
-      
+
       try {
         const user = await apiService.register(userData);
         // Note: User needs to login after registration in MVP
-        set({ 
+        set({
           isLoading: false,
-          error: null 
+          error: null
         });
       } catch (error: any) {
-        set({ 
-          error: error.message || 'Registration failed', 
-          isLoading: false 
+        const errorMessage = error.response?.data?.detail || error.message || 'Registration failed';
+        set({
+          error: errorMessage,
+          isLoading: false
         });
         throw error;
       }

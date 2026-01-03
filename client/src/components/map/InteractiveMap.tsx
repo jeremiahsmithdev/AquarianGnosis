@@ -3,6 +3,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useMapStore } from '../../stores/mapStore';
 import { useAuthStore } from '../../stores/authStore';
+import { MapFilters } from './MapFilters';
 import type { UserLocation } from '../../types';
 
 // Fix Leaflet default markers in React
@@ -13,21 +14,43 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
+// Marker icon configurations
+const MARKER_SHADOW_URL = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png';
+const MARKER_ICON_CONFIG = {
+  iconSize: [25, 41] as [number, number],
+  iconAnchor: [12, 41] as [number, number],
+  popupAnchor: [1, -34] as [number, number],
+  shadowSize: [41, 41] as [number, number],
+};
+
+const createColoredIcon = (color: 'green' | 'red' | 'blue') => L.icon({
+  iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${color}.png`,
+  shadowUrl: MARKER_SHADOW_URL,
+  ...MARKER_ICON_CONFIG,
+});
+
 interface InteractiveMapProps {
   onUserSelect?: (userId: string) => void;
+  onMapClick?: (lat: number, lng: number) => void;
+  clickSelectMode?: boolean;
+  centerLocation?: { lat: number; lng: number } | null;
   height?: string;
 }
 
-export const InteractiveMap: React.FC<InteractiveMapProps> = ({ 
-  onUserSelect, 
-  height = '600px' 
+export const InteractiveMap: React.FC<InteractiveMapProps> = ({
+  onUserSelect,
+  onMapClick,
+  clickSelectMode = false,
+  centerLocation,
+  height = '600px'
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.LayerGroup>(new L.LayerGroup());
   const userMarkerRef = useRef<L.Marker | null>(null);
   const currentPositionMarkerRef = useRef<L.Marker | null>(null);
-  
+  const clickMarkerRef = useRef<L.Marker | null>(null);
+
   const [isLocatingUser, setIsLocatingUser] = useState(false);
   
   const {
@@ -70,20 +93,94 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       // Clean up marker references
       userMarkerRef.current = null;
       currentPositionMarkerRef.current = null;
+      clickMarkerRef.current = null;
     };
   }, []);
 
-  // Create red pin icon for current position
-  const createRedPinIcon = () => {
-    return L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      shadowSize: [41, 41]
-    });
-  };
+  // Handle click-to-select mode
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map) return;
+
+    const handleMapClick = (e: L.LeafletMouseEvent) => {
+      if (!clickSelectMode || !onMapClick) return;
+
+      const { lat, lng } = e.latlng;
+
+      // Remove existing click marker
+      if (clickMarkerRef.current) {
+        map.removeLayer(clickMarkerRef.current);
+      }
+
+      // Add new marker at clicked location
+      const marker = L.marker([lat, lng], { icon: createColoredIcon('green') });
+
+      marker.bindPopup(`
+        <div class="map-popup">
+          <div class="popup-title">Selected Location</div>
+          <div class="popup-coords">
+            ${lat.toFixed(4)}, ${lng.toFixed(4)}
+          </div>
+        </div>
+      `).openPopup();
+
+      marker.addTo(map);
+      clickMarkerRef.current = marker;
+
+      // Notify parent component
+      onMapClick(lat, lng);
+    };
+
+    map.on('click', handleMapClick);
+
+    // Update cursor style based on mode
+    if (clickSelectMode) {
+      map.getContainer().style.cursor = 'crosshair';
+    } else {
+      map.getContainer().style.cursor = '';
+    }
+
+    return () => {
+      map.off('click', handleMapClick);
+      map.getContainer().style.cursor = '';
+    };
+  }, [clickSelectMode, onMapClick]);
+
+  // Center map when centerLocation changes
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || !centerLocation) return;
+
+    map.setView([centerLocation.lat, centerLocation.lng], 12);
+
+    // If in click select mode, also place a marker
+    if (clickSelectMode && onMapClick) {
+      // Remove existing click marker
+      if (clickMarkerRef.current) {
+        map.removeLayer(clickMarkerRef.current);
+      }
+
+      // Add marker at searched location
+      const marker = L.marker([centerLocation.lat, centerLocation.lng], {
+        icon: createColoredIcon('green')
+      });
+
+      marker.bindPopup(`
+        <div class="map-popup">
+          <div class="popup-title">Selected Location</div>
+          <div class="popup-coords">
+            ${centerLocation.lat.toFixed(4)}, ${centerLocation.lng.toFixed(4)}
+          </div>
+        </div>
+      `).openPopup();
+
+      marker.addTo(map);
+      clickMarkerRef.current = marker;
+
+      // Notify parent
+      onMapClick(centerLocation.lat, centerLocation.lng);
+    }
+  }, [centerLocation, clickSelectMode, onMapClick]);
 
   // Get user's current position
   const getCurrentPosition = () => {
@@ -115,7 +212,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           
           // Create red pin marker
           const redPinMarker = L.marker([coords.latitude, coords.longitude], {
-            icon: createRedPinIcon()
+            icon: createColoredIcon('red')
           });
           
           // Add popup to the red pin
@@ -176,25 +273,29 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
     // Add location markers
     locationsToShow.forEach((location) => {
       const marker = L.marker([Number(location.latitude), Number(location.longitude)]);
-      
-      // Create popup content
+
+      // Create popup content with username
+      const displayName = location.username || 'Anonymous User';
       const popupContent = `
         <div class="map-popup">
+          <div class="popup-header">
+            <span class="popup-username">@${displayName}</span>
+          </div>
           <div class="popup-status status-${location.status}">
-            ${location.status.toUpperCase()}
+            ${location.status.charAt(0).toUpperCase() + location.status.slice(1)}
           </div>
           <div class="popup-actions">
             ${isAuthenticated ? `
               <button onclick="window.selectUser('${location.user_id}')" class="contact-button">
-                Contact User
+                Message
               </button>
             ` : `
-              <p><em>Sign in to connect with other users</em></p>
+              <p class="popup-signin-prompt">Sign in to connect</p>
             `}
           </div>
         </div>
       `;
-      
+
       marker.bindPopup(popupContent);
       markersRef.current.addLayer(marker);
     });
@@ -202,14 +303,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
     // Add user's own location marker (different style)
     if (isAuthenticated && userLocation) {
       const userMarker = L.marker([Number(userLocation.latitude), Number(userLocation.longitude)], {
-        icon: L.icon({
-          iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-          iconSize: [25, 41],
-          iconAnchor: [12, 41],
-          popupAnchor: [1, -34],
-          shadowSize: [41, 41]
-        })
+        icon: createColoredIcon('blue')
       });
       
       userMarker.bindPopup(`
@@ -243,35 +337,39 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   return (
     <div className="interactive-map-container">
       <div className="map-controls">
-        <button
-          onClick={getCurrentPosition}
-          disabled={isLocatingUser}
-          className="locate-button"
-        >
-          {isLocatingUser ? 'Locating...' : '📍 Find My Location'}
-        </button>
-        
-        {isAuthenticated && (
-          <div className="map-stats">
-            <span className="stat">
-              Nearby: {nearbyLocations.length}
-            </span>
-            {userLocation && (
-              <span className="stat status-indicator">
-                Your status: <span className={`status-${userLocation.status}`}>
-                  {userLocation.status}
-                </span>
+        <div className="controls-row">
+          <button
+            onClick={getCurrentPosition}
+            disabled={isLocatingUser}
+            className="locate-button"
+          >
+            {isLocatingUser ? 'Locating...' : '📍 Find My Location'}
+          </button>
+
+          {isAuthenticated && (
+            <div className="map-stats">
+              <span className="stat">
+                Nearby: {nearbyLocations.length}
               </span>
-            )}
-          </div>
-        )}
-        
-        {!isAuthenticated && (
-          <div className="map-info">
-            <span>Public locations: {publicLocations.length}</span>
-            <span className="sign-in-prompt">Sign in to see nearby users and add your location</span>
-          </div>
-        )}
+              {userLocation && (
+                <span className="stat status-indicator">
+                  Your status: <span className={`status-${userLocation.status}`}>
+                    {userLocation.status}
+                  </span>
+                </span>
+              )}
+            </div>
+          )}
+
+          {!isAuthenticated && (
+            <div className="map-info">
+              <span>Public locations: {publicLocations.length}</span>
+              <span className="sign-in-prompt">Sign in to see nearby users and add your location</span>
+            </div>
+          )}
+        </div>
+
+        <MapFilters />
       </div>
 
       {error && (

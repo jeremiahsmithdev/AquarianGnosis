@@ -24,16 +24,18 @@ class User(Base):
 
 class UserLocation(Base):
     __tablename__ = "user_locations"
-    
+
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     latitude = Column(DECIMAL(10, 8), nullable=False)
     longitude = Column(DECIMAL(11, 8), nullable=False)
     is_public = Column(Boolean, default=True)
     status = Column(String(20), default="permanent")  # permanent, traveling, nomadic
+    visibility_type = Column(String(20), default="public")  # public, members, custom
+    allowed_users = Column(Text, nullable=True)  # JSON array of usernames when visibility_type is 'custom'
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
-    
+
     # Relationships
     user = relationship("User", back_populates="locations")
 

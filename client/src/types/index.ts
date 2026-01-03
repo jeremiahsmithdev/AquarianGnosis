@@ -38,8 +38,11 @@ interface UserLocation {
   longitude: number;
   is_public: boolean;
   status: 'permanent' | 'traveling' | 'nomadic';
+  visibility_type?: 'public' | 'members' | 'custom';
+  allowed_users?: string[]; // Usernames allowed to see location (when visibility_type is 'custom')
   created_at: string;
   updated_at: string;
+  username?: string; // Username for map display
 }
 
 interface LocationRequest {
@@ -93,6 +96,9 @@ interface MapFilters {
   radius: number;
   status?: 'permanent' | 'traveling' | 'nomadic' | 'all';
   showOnlyPublic?: boolean;
+  showUsers?: boolean;
+  showStudyGroups?: boolean;
+  showGnosticCenters?: boolean;
 }
 
 interface GeolocationCoords {
