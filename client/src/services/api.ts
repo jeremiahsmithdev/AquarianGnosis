@@ -24,7 +24,11 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // Only redirect on 401 for non-auth endpoints (session expired)
+    // Don't redirect for login/register failures - let the form show the error
+    const isAuthEndpoint = error.config?.url?.includes('/auth/login') ||
+                           error.config?.url?.includes('/auth/register');
+    if (error.response?.status === 401 && !isAuthEndpoint) {
       localStorage.removeItem('access_token');
       window.location.href = '/auth';
     }
