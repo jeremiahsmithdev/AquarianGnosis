@@ -14,6 +14,7 @@ import { MessagingPage } from './pages/MessagingPage';
 import { VideoPage } from './pages/VideoPage';
 import { AboutPage } from './pages/AboutPage';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
+import { Toast } from './components/common/Toast';
 import './App.css';
 import './styles/landing.css';
 import './styles/auth.css';
@@ -84,6 +85,7 @@ function AppContent() {
 
   return (
     <div className="app">
+      <Toast />
       <div className="dev-disclaimer">
         <p>Coming soon!</p>
         <p>This site is in active development</p>

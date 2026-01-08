@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { apiService } from '../services/api';
 import { identifyUser, resetUser, trackEvent, AnalyticsEvents } from '../services/analytics';
+import { useNotificationStore } from './notificationStore';
 import type { User, LoginRequest, RegisterRequest } from '@/types';
 
 interface AuthState {
@@ -45,6 +46,9 @@ export const useAuthStore = create<AuthState>()(
         // Identify user in analytics
         identifyUser(user);
         trackEvent(AnalyticsEvents.USER_LOGGED_IN);
+
+        // Show success notification
+        useNotificationStore.getState().showNotification('success', `Welcome back, ${user.username}!`);
       } catch (error: any) {
         const errorMessage = error.response?.data?.detail || error.message || 'Login failed';
         set({
@@ -93,6 +97,9 @@ export const useAuthStore = create<AuthState>()(
         isAuthenticated: false,
         error: null
       });
+
+      // Show success notification
+      useNotificationStore.getState().showNotification('success', 'You have been signed out successfully.');
     },
 
     getCurrentUser: async () => {
