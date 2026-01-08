@@ -50,6 +50,16 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
+.nav-link.admin-link {
+  color: #e2d6f8;
+  border: 1px solid rgba(155, 89, 182, 0.5);
+}
+
+.nav-link.admin-link:hover {
+  background: rgba(155, 89, 182, 0.2);
+  border-color: rgba(155, 89, 182, 0.7);
+}
+
 .nav-auth {
   display: flex;
   align-items: center;

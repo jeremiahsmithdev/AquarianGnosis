@@ -17,6 +17,7 @@ from app.api.forum import router as forum_router
 from app.api.study_group import router as study_group_router
 from app.api.resource import router as resource_router
 from app.api.about import router as about_router
+from app.api.admin import router as admin_router
 
 # Configure logging
 configure_logging(log_level="INFO", json_logs=False)
@@ -122,6 +123,7 @@ app.include_router(forum_router, prefix="/api/v1/forum", tags=["forum"])
 app.include_router(study_group_router, prefix="/api/v1", tags=["study-groups"])
 app.include_router(resource_router, prefix="/api/v1", tags=["resources"])
 app.include_router(about_router, prefix="/api/v1/about", tags=["about"])
+app.include_router(admin_router, prefix="/api/v1/admin", tags=["admin"])
 
 @app.get("/")
 async def root():

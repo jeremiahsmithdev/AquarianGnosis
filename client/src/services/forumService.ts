@@ -1,9 +1,9 @@
-import { apiClient } from './api';
+import { apiClient, getNoCacheConfig } from './api';
 import type { ForumCategory, ForumThread, ForumReply } from '@/types';
 
 // Category endpoints
 export const getCategories = async (): Promise<ForumCategory[]> => {
-  const response = await apiClient.get('/forum/categories');
+  const response = await apiClient.get('/forum/categories', getNoCacheConfig());
   return response.data;
 };
 
@@ -23,7 +23,7 @@ export const deleteCategory = async (id: string): Promise<void> => {
 
 // Thread endpoints
 export const getThreadsByCategory = async (categoryId: string): Promise<ForumThread[]> => {
-  const response = await apiClient.get(`/forum/categories/${categoryId}/threads`);
+  const response = await apiClient.get(`/forum/categories/${categoryId}/threads`, getNoCacheConfig());
   return response.data;
 };
 
@@ -33,7 +33,7 @@ export const createThread = async (thread: { title: string; content: string; cat
 };
 
 export const getThread = async (threadId: string): Promise<ForumThread> => {
-  const response = await apiClient.get(`/forum/threads/${threadId}`);
+  const response = await apiClient.get(`/forum/threads/${threadId}`, getNoCacheConfig());
   return response.data;
 };
 
@@ -48,7 +48,7 @@ export const deleteThread = async (id: string): Promise<void> => {
 
 // Reply endpoints
 export const getRepliesByThread = async (threadId: string): Promise<ForumReply[]> => {
-  const response = await apiClient.get(`/forum/threads/${threadId}/replies`);
+  const response = await apiClient.get(`/forum/threads/${threadId}/replies`, getNoCacheConfig());
   return response.data;
 };
 

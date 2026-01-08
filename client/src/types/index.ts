@@ -335,3 +335,64 @@ export type {
   CommentCreateRequest,
   SuggestionCreateRequest
 };
+
+// Admin Dashboard Types
+interface DashboardStats {
+  total_users: number;
+  active_users: number;
+  admin_users: number;
+  total_forum_threads: number;
+  total_forum_replies: number;
+  pending_resources: number;
+  approved_resources: number;
+  total_study_groups: number;
+  users_created_last_7_days: number;
+  users_created_last_30_days: number;
+}
+
+interface AdminUser {
+  id: string;
+  username: string;
+  email: string;
+  is_verified: boolean;
+  is_active: boolean;
+  is_admin: boolean;
+  created_at: string;
+  updated_at: string;
+  location_count: number;
+}
+
+interface AdminUserUpdate {
+  is_active?: boolean;
+  is_admin?: boolean;
+  is_verified?: boolean;
+}
+
+interface UserListResponse {
+  users: AdminUser[];
+  total: number;
+  page: number;
+  page_size: number;
+}
+
+interface PendingResource {
+  id: string;
+  title: string;
+  url?: string;
+  description?: string;
+  resource_type: string;
+  submitted_by: string;
+  submitter_username: string;
+  upvotes: number;
+  downvotes: number;
+  created_at: string;
+}
+
+// Export Admin types using type-only syntax
+export type {
+  DashboardStats,
+  AdminUser,
+  AdminUserUpdate,
+  UserListResponse,
+  PendingResource
+};

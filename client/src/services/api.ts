@@ -36,6 +36,12 @@ apiClient.interceptors.response.use(
   }
 );
 
+// Cache-busting config for GET requests that need fresh data
+export const getNoCacheConfig = () => ({
+  headers: { 'Cache-Control': 'no-cache' },
+  params: { _t: Date.now() }
+});
+
 // Auth API methods
 const authApi = {
   login: async (credentials: LoginRequest) => {

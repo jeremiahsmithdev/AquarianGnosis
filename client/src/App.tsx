@@ -13,6 +13,7 @@ import { OrganizationsPage } from './pages/OrganizationsPage';
 import { MessagingPage } from './pages/MessagingPage';
 import { VideoPage } from './pages/VideoPage';
 import { AboutPage } from './pages/AboutPage';
+import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import { Toast } from './components/common/Toast';
 import './App.css';
@@ -43,7 +44,7 @@ function RouterSync() {
 function AppContent() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, getCurrentUser } = useAuthStore();
+  const { isAuthenticated, user, getCurrentUser } = useAuthStore();
   const {
     selectedUser,
     setIsNavigating,
@@ -143,6 +144,18 @@ function AppContent() {
 
         <Route path="/about" element={
           <AboutPage onNavigate={handleNavigate} />
+        } />
+
+        <Route path="/admin" element={
+          user?.is_admin ? (
+            <AdminDashboardPage onNavigate={handleNavigate} />
+          ) : (
+            <div className="access-denied">
+              <h1>403 - Access Denied</h1>
+              <p>You do not have permission to access this page.</p>
+              <button onClick={() => handleNavigate('landing')}>Return Home</button>
+            </div>
+          )
         } />
       </Routes>
     </div>

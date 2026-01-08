@@ -42,6 +42,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onAuthClic
               Messages
             </button>
           )}
+          {isAuthenticated && user?.is_admin && (
+            <button onClick={() => onNavigate('admin')} className="nav-link admin-link">
+              Admin
+            </button>
+          )}
         </div>
         <div className="nav-auth">
           {isAuthenticated ? (
@@ -103,7 +108,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onAuthClic
       {/* Footer */}
       <footer className="landing-footer">
         <p>
-          &copy; 2025 Aquarian Gnosis. Uniting seekers of truth across <i>all</i> traditions.
+          ☉ 2025 Aquarian Gnosis. Uniting seekers of truth across <i>all</i> traditions.
         </p>
       </footer>
     </div>

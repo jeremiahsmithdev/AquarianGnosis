@@ -99,3 +99,42 @@
   font-weight: 700;
   font-size: 15px;
 }
+
+/* Access Denied Page */
+.access-denied {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  padding: 40px;
+  background: #f8f9fa;
+}
+
+.access-denied h1 {
+  color: #e74c3c;
+  margin-bottom: 20px;
+  font-size: 2.5rem;
+}
+
+.access-denied p {
+  color: #7f8c8d;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+}
+
+.access-denied button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.access-denied button:hover {
+  background-color: #2980b9;
+}
