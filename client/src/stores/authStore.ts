@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { apiService } from '../services/api';
+import { identifyUser, resetUser, trackEvent, AnalyticsEvents } from '../services/analytics';
 import type { User, LoginRequest, RegisterRequest } from '@/types';
 
 interface AuthState {
@@ -37,6 +38,10 @@ export const useAuthStore = create<AuthState>()(
           isLoading: false,
           error: null
         });
+
+        // Identify user in analytics
+        identifyUser(user);
+        trackEvent(AnalyticsEvents.USER_LOGGED_IN);
       } catch (error: any) {
         const errorMessage = error.response?.data?.detail || error.message || 'Login failed';
         set({
@@ -59,6 +64,9 @@ export const useAuthStore = create<AuthState>()(
           isLoading: false,
           error: null
         });
+
+        // Track registration event
+        trackEvent(AnalyticsEvents.USER_SIGNED_UP);
       } catch (error: any) {
         const errorMessage = error.response?.data?.detail || error.message || 'Registration failed';
         set({
@@ -70,11 +78,15 @@ export const useAuthStore = create<AuthState>()(
     },
 
     logout: () => {
+      // Track logout event before resetting
+      trackEvent(AnalyticsEvents.USER_LOGGED_OUT);
+      resetUser();
+
       apiService.logout();
-      set({ 
-        user: null, 
-        isAuthenticated: false, 
-        error: null 
+      set({
+        user: null,
+        isAuthenticated: false,
+        error: null
       });
     },
 
@@ -88,12 +100,15 @@ export const useAuthStore = create<AuthState>()(
       
       try {
         const user = await apiService.getCurrentUser();
-        set({ 
-          user, 
-          isAuthenticated: true, 
+        set({
+          user,
+          isAuthenticated: true,
           isLoading: false,
-          error: null 
+          error: null
         });
+
+        // Re-identify user on session restore
+        identifyUser(user);
       } catch (error: any) {
         // Token might be expired or invalid
         apiService.logout();

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from './stores/authStore';
 import { useNavigationStore, getPageFromPath, getPagePath } from './stores/navigationStore';
+import { trackPageView } from './services/analytics';
 import { LandingPage } from './pages/LandingPage';
 import { AuthPage } from './pages/AuthPage';
 import { MapPage } from './pages/MapPage';
@@ -30,6 +31,9 @@ function RouterSync() {
   useEffect(() => {
     const pageFromPath = getPageFromPath(location.pathname);
     setCurrentPage(pageFromPath);
+
+    // Track page view for analytics
+    trackPageView(location.pathname, pageFromPath);
   }, [location.pathname, setCurrentPage]);
 
   return null;
