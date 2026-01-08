@@ -10,7 +10,7 @@ interface AuthPageProps {
 
 export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
-  const { isAuthenticated, isLoading, getCurrentUser } = useAuthStore();
+  const { isAuthenticated, getCurrentUser } = useAuthStore();
   const hasRedirected = useRef(false);
 
   useEffect(() => {
@@ -29,23 +29,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
 
   // Redirect authenticated users who land here directly
   useEffect(() => {
-    if (isAuthenticated && !isLoading && !hasRedirected.current) {
+    if (isAuthenticated && !hasRedirected.current) {
       hasRedirected.current = true;
       onSuccess?.();
     }
-  }, [isAuthenticated, isLoading, onSuccess]);
+  }, [isAuthenticated, onSuccess]);
 
   const handleSwitchToRegister = () => setIsLogin(false);
   const handleSwitchToLogin = () => setIsLogin(true);
-
-  // Show loading while checking authentication
-  if (isLoading) {
-    return (
-      <div className="auth-loading">
-        <p>Loading...</p>
-      </div>
-    );
-  }
 
   return (
     <div className="auth-page">

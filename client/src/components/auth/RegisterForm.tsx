@@ -13,11 +13,11 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin, onS
     email: '',
     password: '',
   });
-  
+
   const [confirmPassword, setConfirmPassword] = useState('');
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
-  
-  const { register, isLoading, error, clearError } = useAuthStore();
+
+  const { register, isLoading, error, clearError, registrationSuccess, clearRegistrationSuccess } = useAuthStore();
 
   const validateForm = (): boolean => {
     const errors: Record<string, string> = {};
@@ -59,9 +59,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin, onS
     
     try {
       await register(formData);
-      // Show success message and switch to login
-      alert('Registration successful! Please log in with your credentials.');
-      onSwitchToLogin();
+      // Success is handled by the store via registrationSuccess
     } catch (error) {
       // Error is handled by the store
     }
@@ -87,6 +85,28 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin, onS
       }));
     }
   };
+
+  const handleSuccessClose = () => {
+    clearRegistrationSuccess();
+    onSwitchToLogin();
+  };
+
+  // Show success screen instead of form after registration
+  if (registrationSuccess) {
+    return (
+      <div className="register-form">
+        <div className="form-container success-container">
+          <div className="success-icon">✓</div>
+          <h2 className="form-title">Welcome to Aquarian Gnosis!</h2>
+          <p className="form-subtitle">Your account has been created successfully.</p>
+          <p style={{ color: '#6b7280', marginBottom: '24px' }}>You can now sign in with your credentials.</p>
+          <button className="form-button primary" onClick={handleSuccessClose}>
+            Continue to Sign In
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="register-form">

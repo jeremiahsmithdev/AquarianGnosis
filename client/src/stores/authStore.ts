@@ -8,7 +8,8 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  
+  registrationSuccess: boolean;
+
   // Actions
   login: (credentials: LoginRequest) => Promise<void>;
   register: (userData: RegisterRequest) => Promise<void>;
@@ -16,6 +17,7 @@ interface AuthState {
   getCurrentUser: () => Promise<void>;
   clearError: () => void;
   setLoading: (loading: boolean) => void;
+  clearRegistrationSuccess: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -24,6 +26,7 @@ export const useAuthStore = create<AuthState>()(
     isAuthenticated: false,
     isLoading: false,
     error: null,
+    registrationSuccess: false,
 
     login: async (credentials: LoginRequest) => {
       set({ isLoading: true, error: null });
@@ -55,14 +58,15 @@ export const useAuthStore = create<AuthState>()(
     },
 
     register: async (userData: RegisterRequest) => {
-      set({ isLoading: true, error: null });
+      set({ isLoading: true, error: null, registrationSuccess: false });
 
       try {
         const user = await apiService.register(userData);
         // Note: User needs to login after registration in MVP
         set({
           isLoading: false,
-          error: null
+          error: null,
+          registrationSuccess: true
         });
 
         // Track registration event
@@ -71,7 +75,8 @@ export const useAuthStore = create<AuthState>()(
         const errorMessage = error.response?.data?.detail || error.message || 'Registration failed';
         set({
           error: errorMessage,
-          isLoading: false
+          isLoading: false,
+          registrationSuccess: false
         });
         throw error;
       }
@@ -122,7 +127,9 @@ export const useAuthStore = create<AuthState>()(
     },
 
     clearError: () => set({ error: null }),
-    
+
     setLoading: (loading: boolean) => set({ isLoading: loading }),
+
+    clearRegistrationSuccess: () => set({ registrationSuccess: false }),
   })
 );
