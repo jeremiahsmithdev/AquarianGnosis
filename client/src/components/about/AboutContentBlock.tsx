@@ -168,8 +168,9 @@ export const AboutContentBlock: React.FC<Props> = ({ block }) => {
   }, [block.content, highlightRanges, isReviewMode]);
 
   // Handle text selection for new comments/suggestions
+  // Allow selection even when not in review mode - review mode will be entered when user clicks action button
   const handleMouseUp = useCallback(() => {
-    if (!isReviewMode || !isAuthenticated) return;
+    if (!isAuthenticated) return;
 
     const selection = window.getSelection();
     if (!selection || selection.isCollapsed || !blockRef.current) return;
@@ -239,7 +240,7 @@ export const AboutContentBlock: React.FC<Props> = ({ block }) => {
       selectedText,
       boundingRect: rect
     });
-  }, [isReviewMode, isAuthenticated, block.id, setCurrentSelection]);
+  }, [isAuthenticated, block.id, setCurrentSelection]);
 
   // Add click handlers to highlights after render
   useEffect(() => {

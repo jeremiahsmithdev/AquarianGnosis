@@ -333,6 +333,23 @@
   opacity: 1;
 }
 
+/* Guest banner - always visible for non-authenticated users */
+.review-mode-banner.guest-banner {
+  color: #b0b0b0;
+}
+
+.review-mode-banner .sign-in-link {
+  color: #6ba3d6;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s ease;
+}
+
+.review-mode-banner .sign-in-link:hover {
+  color: #8fc0eb;
+}
+
 /* Review mode active state - persistent sidebar layout */
 .about-page.review-mode-active {
   display: flex;

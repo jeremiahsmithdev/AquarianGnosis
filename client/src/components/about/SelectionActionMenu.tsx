@@ -1,13 +1,14 @@
 /**
- * SelectionActionMenu - Floating menu that appears when text is selected in review mode.
+ * SelectionActionMenu - Floating menu that appears when text is selected by authenticated users.
  * Allows user to add a comment or suggest an edit.
+ * Automatically enters review mode when an action is selected.
  * Updates position on scroll to stay with the selected text.
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAboutStore } from '../../stores/aboutStore';
 
 export const SelectionActionMenu: React.FC = () => {
-  const { currentSelection, openSidebar, setCurrentSelection } = useAboutStore();
+  const { currentSelection, openSidebar, setCurrentSelection, isReviewMode, setReviewMode } = useAboutStore();
   const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
 
   // Update position based on current selection range
@@ -72,10 +73,18 @@ export const SelectionActionMenu: React.FC = () => {
   if (!currentSelection || !position) return null;
 
   const handleComment = () => {
+    // Auto-enter review mode if not already in it
+    if (!isReviewMode) {
+      setReviewMode(true);
+    }
     openSidebar('comment', { top: position.top });
   };
 
   const handleSuggest = () => {
+    // Auto-enter review mode if not already in it
+    if (!isReviewMode) {
+      setReviewMode(true);
+    }
     openSidebar('suggest', { top: position.top });
   };
 

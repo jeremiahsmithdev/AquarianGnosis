@@ -5,6 +5,7 @@
  */
 import React, { useEffect } from 'react';
 import { useAboutStore } from '../stores/aboutStore';
+import { useAuthStore } from '../stores/authStore';
 import {
   AboutContentBlock,
   CommentSidebar,
@@ -18,6 +19,7 @@ interface AboutPageProps {
 }
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
+  const { isAuthenticated } = useAuthStore();
   const {
     blocks,
     isContentLoading,
@@ -25,13 +27,23 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
     isReviewMode,
     currentSelection,
     sidebarMode,
-    fetchContent
+    fetchContent,
+    closeSidebar,
+    setReviewMode
   } = useAboutStore();
 
   // Fetch content on mount
   useEffect(() => {
     fetchContent();
   }, [fetchContent]);
+
+  // Reset review state when user logs out
+  useEffect(() => {
+    if (!isAuthenticated) {
+      closeSidebar();
+      setReviewMode(false);
+    }
+  }, [isAuthenticated, closeSidebar, setReviewMode]);
 
   // Show loading state
   if (isContentLoading && blocks.length === 0) {
@@ -79,9 +91,15 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        <div className={`review-mode-banner ${isReviewMode ? 'open' : ''}`}>
-          Select text to add a comment or suggest an edit
-        </div>
+        {isAuthenticated ? (
+          <div className={`review-mode-banner ${isReviewMode ? 'open' : ''}`}>
+            Select text to add a comment or suggest an edit
+          </div>
+        ) : (
+          <div className="review-mode-banner open guest-banner">
+            This is a living document. <span className="sign-in-link" onClick={() => onNavigate('auth')}>Sign in</span> to comment, suggest edits, and help shape the vision.
+          </div>
+        )}
       </div>
 
       <article className="about-content">
@@ -94,7 +112,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       <CommentSidebar />
 
       {/* Selection action menu - show when text selected and not in input mode */}
-      {isReviewMode && currentSelection && sidebarMode === 'view' && (
+      {isAuthenticated && currentSelection && sidebarMode === 'view' && (
         <SelectionActionMenu />
       )}
     </div>

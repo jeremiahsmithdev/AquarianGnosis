@@ -34,6 +34,7 @@ interface AboutState {
 
   // Actions
   fetchContent: () => Promise<void>;
+  setReviewMode: (enabled: boolean) => void;
   setCurrentSelection: (selection: TextSelection | null) => void;
   openSidebar: (mode: 'view' | 'comment' | 'suggest') => void;
   closeSidebar: () => void;
@@ -115,6 +116,10 @@ export const useAboutStore = create<AboutState>()((set, get) => ({
 
   toggleReviewMode: () => {
     set((state) => ({ isReviewMode: !state.isReviewMode }));
+  },
+
+  setReviewMode: (enabled) => {
+    set({ isReviewMode: enabled });
   },
 
   // Comment actions
