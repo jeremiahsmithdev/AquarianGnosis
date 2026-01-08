@@ -7,6 +7,7 @@ interface User {
   email: string;
   is_verified: boolean;
   is_active: boolean;
+  is_admin: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -236,3 +237,101 @@ interface SharedResourceRequest {
 
 // Export shared resource types using type-only syntax
 export type { SharedResource, SharedResourceRequest };
+
+// About Page Review/Edit Types
+interface AboutContentBlock {
+  id: string;
+  block_type: string;
+  block_key: string;
+  display_order: number;
+  content: string;
+  parent_block_id?: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  comments: AboutComment[];
+  suggestions: AboutEditSuggestion[];
+}
+
+interface AboutComment {
+  id: string;
+  block_id: string;
+  author_id: string;
+  author_username?: string;
+  start_offset: number;
+  end_offset: number;
+  selected_text: string;
+  content: string;
+  is_resolved: boolean;
+  resolved_by?: string;
+  resolved_at?: string;
+  created_at: string;
+  updated_at: string;
+  replies: AboutCommentReply[];
+}
+
+interface AboutCommentReply {
+  id: string;
+  comment_id: string;
+  author_id: string;
+  author_username?: string;
+  content: string;
+  created_at: string;
+}
+
+interface AboutEditSuggestion {
+  id: string;
+  block_id: string;
+  author_id: string;
+  author_username?: string;
+  start_offset: number;
+  end_offset: number;
+  original_text: string;
+  suggested_text: string;
+  status: 'pending' | 'accepted' | 'rejected';
+  reviewed_by?: string;
+  reviewed_at?: string;
+  review_note?: string;
+  created_at: string;
+}
+
+interface AboutContentResponse {
+  blocks: AboutContentBlock[];
+  can_edit: boolean;
+}
+
+interface TextSelection {
+  blockId: string;
+  startOffset: number;
+  endOffset: number;
+  selectedText: string;
+  boundingRect: DOMRect;
+}
+
+interface CommentCreateRequest {
+  block_id: string;
+  start_offset: number;
+  end_offset: number;
+  selected_text: string;
+  content: string;
+}
+
+interface SuggestionCreateRequest {
+  block_id: string;
+  start_offset: number;
+  end_offset: number;
+  original_text: string;
+  suggested_text: string;
+}
+
+// Export About types using type-only syntax
+export type {
+  AboutContentBlock,
+  AboutComment,
+  AboutCommentReply,
+  AboutEditSuggestion,
+  AboutContentResponse,
+  TextSelection,
+  CommentCreateRequest,
+  SuggestionCreateRequest
+};

@@ -116,7 +116,26 @@ const mapApi = {
   }
 };
 
-// Create the combined API service by extending the axios instance
-const apiService = Object.assign(apiClient, authApi, mapApi);
+// Export the client directly for services that need raw axios access
+export { apiClient };
 
-export { apiService };
+// Export auth methods directly to avoid spread/minification issues
+export const apiService = {
+  client: apiClient,
+
+  // Auth methods - explicitly defined to avoid tree-shaking issues
+  login: authApi.login,
+  register: authApi.register,
+  logout: authApi.logout,
+  getCurrentUser: authApi.getCurrentUser,
+  isAuthenticated: authApi.isAuthenticated,
+
+  // Map methods
+  getUserLocation: mapApi.getUserLocation,
+  addLocation: mapApi.addLocation,
+  updateLocation: mapApi.updateLocation,
+  deleteLocation: mapApi.deleteLocation,
+  getNearbyLocations: mapApi.getNearbyLocations,
+  getPublicLocations: mapApi.getPublicLocations,
+  getMapStats: mapApi.getMapStats,
+};

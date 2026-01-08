@@ -1,9 +1,9 @@
-import { apiService } from './api';
+import { apiClient } from './api';
 import type { StudyGroup, StudyGroupMember } from '@/types';
 
 // Study Group endpoints
 export const getStudyGroups = async (): Promise<StudyGroup[]> => {
-  const response = await apiService.get('/study-groups');
+  const response = await apiClient.get('/study-groups');
   return response.data;
 };
 
@@ -14,12 +14,12 @@ export const createStudyGroup = async (group: {
   max_members?: number;
   is_public?: boolean;
 }): Promise<StudyGroup> => {
-  const response = await apiService.post('/study-groups', group);
+  const response = await apiClient.post('/study-groups', group);
   return response.data;
 };
 
 export const getStudyGroup = async (groupId: string): Promise<StudyGroup> => {
-  const response = await apiService.get(`/study-groups/${groupId}`);
+  const response = await apiClient.get(`/study-groups/${groupId}`);
   return response.data;
 };
 
@@ -30,31 +30,31 @@ export const updateStudyGroup = async (groupId: string, group: {
   max_members?: number;
   is_public?: boolean;
 }): Promise<StudyGroup> => {
-  const response = await apiService.put(`/study-groups/${groupId}`, group);
+  const response = await apiClient.put(`/study-groups/${groupId}`, group);
   return response.data;
 };
 
 export const deleteStudyGroup = async (groupId: string): Promise<void> => {
-  await apiService.delete(`/study-groups/${groupId}`);
+  await apiClient.delete(`/study-groups/${groupId}`);
 };
 
 export const joinStudyGroup = async (groupId: string): Promise<StudyGroupMember> => {
-  const response = await apiService.post(`/study-groups/${groupId}/join`, { group_id: groupId });
+  const response = await apiClient.post(`/study-groups/${groupId}/join`, { group_id: groupId });
   return response.data;
 };
 
 export const getStudyGroupMembers = async (groupId: string): Promise<StudyGroupMember[]> => {
-  const response = await apiService.get(`/study-groups/${groupId}/members`);
+  const response = await apiClient.get(`/study-groups/${groupId}/members`);
   return response.data;
 };
 
 export const updateStudyGroupMember = async (groupId: string, memberId: string, member: { 
   role?: string;
 }): Promise<StudyGroupMember> => {
-  const response = await apiService.put(`/study-groups/${groupId}/members/${memberId}`, member);
+  const response = await apiClient.put(`/study-groups/${groupId}/members/${memberId}`, member);
   return response.data;
 };
 
 export const removeStudyGroupMember = async (groupId: string, memberId: string): Promise<void> => {
-  await apiService.delete(`/study-groups/${groupId}/members/${memberId}`);
+  await apiClient.delete(`/study-groups/${groupId}/members/${memberId}`);
 };
