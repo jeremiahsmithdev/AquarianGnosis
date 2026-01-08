@@ -14,6 +14,10 @@ export const SelectionActionMenu: React.FC = () => {
   const updatePosition = useCallback(() => {
     const selection = window.getSelection();
     if (!selection || selection.isCollapsed || !currentSelection) {
+      // Selection was lost (user clicked elsewhere) - clear state
+      if (currentSelection) {
+        setCurrentSelection(null);
+      }
       return;
     }
 
@@ -30,7 +34,7 @@ export const SelectionActionMenu: React.FC = () => {
     }
   }, [currentSelection, setCurrentSelection]);
 
-  // Set initial position and listen for scroll
+  // Set initial position and listen for scroll/selection changes
   useEffect(() => {
     if (!currentSelection) {
       setPosition(null);
@@ -48,11 +52,22 @@ export const SelectionActionMenu: React.FC = () => {
       updatePosition();
     };
 
+    // Clear selection when user clicks elsewhere and loses selection
+    const handleSelectionChange = () => {
+      const selection = window.getSelection();
+      if (!selection || selection.isCollapsed) {
+        setCurrentSelection(null);
+      }
+    };
+
     window.addEventListener('scroll', handleScroll, true);
+    document.addEventListener('selectionchange', handleSelectionChange);
+
     return () => {
       window.removeEventListener('scroll', handleScroll, true);
+      document.removeEventListener('selectionchange', handleSelectionChange);
     };
-  }, [currentSelection, updatePosition]);
+  }, [currentSelection, updatePosition, setCurrentSelection]);
 
   if (!currentSelection || !position) return null;
 
