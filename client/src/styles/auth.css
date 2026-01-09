@@ -284,3 +284,229 @@
     font-size: 20px;
   }
 }
+
+/* Telegram Login Styles */
+.social-login-section {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.telegram-login-placeholder {
+  text-align: center;
+}
+
+.telegram-button-mock {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: #0088cc;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.telegram-button-mock .telegram-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.telegram-dev-note {
+  font-size: 12px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.telegram-login-container {
+  display: flex;
+  justify-content: center;
+}
+
+.telegram-login-container.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  margin: 24px 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.auth-divider span {
+  padding: 0 16px;
+  color: #6b7280;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* Telegram Account Settings Styles */
+.telegram-settings {
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.telegram-settings-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 16px 0;
+}
+
+.telegram-settings-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.telegram-linked {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.telegram-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.telegram-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #0088cc;
+}
+
+.telegram-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.telegram-username {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.telegram-status {
+  font-size: 13px;
+  color: #10b981;
+}
+
+.telegram-unlink-button {
+  padding: 10px 20px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s ease;
+  align-self: flex-start;
+}
+
+.telegram-unlink-button:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.telegram-unlink-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.telegram-unlink-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.telegram-confirm-text {
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.telegram-confirm-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.telegram-cancel-button {
+  padding: 10px 20px;
+  background: #e5e7eb;
+  color: #374151;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.telegram-cancel-button:hover:not(:disabled) {
+  background: #d1d5db;
+}
+
+.telegram-cancel-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.telegram-warning {
+  color: #f59e0b;
+  font-size: 13px;
+  margin: 0;
+}
+
+.telegram-not-linked {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.telegram-description {
+  color: #6b7280;
+  font-size: 14px;
+  margin: 0;
+  text-align: center;
+}
+
+/* Responsive adjustments for Telegram */
+@media (max-width: 480px) {
+  .telegram-info {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .telegram-linked {
+    align-items: center;
+  }
+
+  .telegram-unlink-button {
+    width: 100%;
+  }
+}

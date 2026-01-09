@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, validator
-from typing import Optional, List
+from typing import Optional, List, Literal
 from datetime import datetime
 from uuid import UUID
 from decimal import Decimal
@@ -7,7 +7,7 @@ from decimal import Decimal
 # User schemas
 class UserBase(BaseModel):
     username: str
-    email: EmailStr
+    email: Optional[EmailStr] = None  # Optional for Telegram-only accounts
 
 class UserCreate(UserBase):
     password: str
@@ -41,12 +41,51 @@ class UserInDB(UserBase):
     is_admin: bool = False
     created_at: datetime
     updated_at: datetime
+    # Telegram fields
+    telegram_id: Optional[int] = None
+    telegram_username: Optional[str] = None
+    telegram_photo_url: Optional[str] = None
+    auth_provider: str = 'local'
 
     class Config:
         from_attributes = True
 
+    @property
+    def has_password(self) -> bool:
+        """Check if user has password auth set up (computed on frontend)."""
+        return self.auth_provider in ('local', 'both')
+
+
 class User(UserInDB):
     pass
+
+
+# Telegram authentication schemas
+class TelegramAuthRequest(BaseModel):
+    """Request schema for Telegram login/registration."""
+
+    id: int  # Telegram user ID
+    first_name: str
+    last_name: Optional[str] = None
+    username: Optional[str] = None
+    photo_url: Optional[str] = None
+    auth_date: int  # Unix timestamp
+    hash: str  # HMAC-SHA-256 hash
+
+
+class TelegramLinkRequest(TelegramAuthRequest):
+    """Request schema for linking Telegram to existing account."""
+
+    pass
+
+
+class ProfileImportOptions(BaseModel):
+    """Options for importing Telegram profile data."""
+
+    import_username: bool = False
+    import_avatar: bool = False
+    import_first_name: bool = False
+    import_last_name: bool = False
 
 # Location schemas
 class LocationBase(BaseModel):

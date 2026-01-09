@@ -6,6 +6,7 @@ Aquarian Gnosis - Gnostic Community Platform
 
 | Feature | Doc | Last Updated | Status |
 |---------|-----|--------------|--------|
+| Telegram Authentication | [telegram-auth.md](./telegram-auth.md) | 2026-01-09 | current |
 | Admin Dashboard | [admin-dashboard.md](./admin-dashboard.md) | 2026-01-09 | current |
 | About Page Review System | [about-review-system.md](./about-review-system.md) | 2026-01-08 | current |
 | Community Map | [community-map.md](./community-map.md) | 2026-01-03 | current |
@@ -14,6 +15,11 @@ Aquarian Gnosis - Gnostic Community Platform
 ## By Category
 
 ### Core Features
+
+- **Telegram Authentication** - [telegram-auth.md](./telegram-auth.md)
+  - Login/register via Telegram, account linking/unlinking
+  - HMAC-SHA-256 hash verification for security
+  - Files: `server/app/api/telegram_auth.py`, `client/src/components/auth/TelegramLoginButton.tsx`
 
 - **Admin Dashboard** - [admin-dashboard.md](./admin-dashboard.md)
   - Site statistics and analytics overview
@@ -42,6 +48,7 @@ Aquarian Gnosis - Gnostic Community Platform
 
 ## Maintenance Log
 
+- 2026-01-09: Added telegram-auth.md for Telegram authentication feature
 - 2026-01-09: Added admin-dashboard.md for site administration feature
 - 2026-01-08: Added about-review-system.md for About page collaborative editing feature
 - 2026-01-03: Created INDEX.md, added community-map.md for map feature

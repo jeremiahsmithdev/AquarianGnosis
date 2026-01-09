@@ -29,7 +29,11 @@ class Settings(BaseSettings):
     
     # Security
     ALGORITHM: str = "HS256"
-    
+
+    # Telegram Bot Configuration (from BotFather)
+    TELEGRAM_BOT_TOKEN: str = ""  # Required for Telegram login
+    TELEGRAM_BOT_USERNAME: str = ""  # Bot username without @
+
     # File Upload
     MAX_UPLOAD_SIZE: int = 10 * 1024 * 1024  # 10MB
     UPLOAD_DIR: str = "uploads"

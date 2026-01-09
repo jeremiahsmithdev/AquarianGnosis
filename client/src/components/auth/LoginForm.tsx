@@ -1,6 +1,7 @@
 import React, { useState, FormEvent } from 'react';
 import { useAuthStore } from '../../stores/authStore';
-import type { LoginRequest } from '../../types';
+import { TelegramLogin } from './TelegramLoginButton';
+import type { LoginRequest, TelegramUser } from '../../types';
 
 interface LoginFormProps {
   onSwitchToRegister: () => void;
@@ -13,7 +14,17 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister, onSucc
     password: '',
   });
   
-  const { login, isLoading, error, clearError } = useAuthStore();
+  const { login, loginWithTelegram, isLoading, error, clearError } = useAuthStore();
+
+  const handleTelegramAuth = async (telegramUser: TelegramUser) => {
+    clearError();
+    try {
+      await loginWithTelegram(telegramUser);
+      onSuccess?.();
+    } catch (err) {
+      // Error is handled by the store
+    }
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -40,7 +51,19 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister, onSucc
       <div className="form-container">
         <h2 className="form-title">Welcome Back</h2>
         <p className="form-subtitle">Sign in to connect with the gnostic community</p>
-        
+
+        {/* Telegram Login */}
+        <div className="social-login-section">
+          <TelegramLogin
+            onAuth={handleTelegramAuth}
+            disabled={isLoading}
+          />
+        </div>
+
+        <div className="auth-divider">
+          <span>or continue with username</span>
+        </div>
+
         {error && (
           <div className="error-message">
             {error}

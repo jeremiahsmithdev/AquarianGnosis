@@ -4,12 +4,37 @@
 interface User {
   id: string;
   username: string;
-  email: string;
+  email: string | null;  // Nullable for Telegram-only accounts
   is_verified: boolean;
   is_active: boolean;
   is_admin: boolean;
   created_at: string;
   updated_at: string;
+  // Telegram fields
+  telegram_id?: number;
+  telegram_username?: string;
+  telegram_photo_url?: string;
+  auth_provider: 'local' | 'telegram' | 'both';
+}
+
+// Telegram Authentication Types
+interface TelegramUser {
+  id: number;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  photo_url?: string;
+  auth_date: number;
+  hash: string;
+}
+
+interface TelegramAuthRequest extends TelegramUser {}
+
+interface ProfileImportOptions {
+  import_username?: boolean;
+  import_avatar?: boolean;
+  import_first_name?: boolean;
+  import_last_name?: boolean;
 }
 
 interface LoginRequest {
@@ -30,6 +55,7 @@ interface AuthResponse {
 
 // Export all authentication types using type-only syntax (required for isolatedModules: true)
 export type { User, LoginRequest, RegisterRequest, AuthResponse };
+export type { TelegramUser, TelegramAuthRequest, ProfileImportOptions };
 
 // Location Types
 interface UserLocation {

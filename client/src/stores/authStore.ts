@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { apiService } from '../services/api';
 import { identifyUser, resetUser, trackEvent, AnalyticsEvents } from '../services/analytics';
 import { useNotificationStore } from './notificationStore';
-import type { User, LoginRequest, RegisterRequest } from '@/types';
+import type { User, LoginRequest, RegisterRequest, TelegramAuthRequest } from '@/types';
 
 interface AuthState {
   user: User | null;
@@ -19,6 +19,11 @@ interface AuthState {
   clearError: () => void;
   setLoading: (loading: boolean) => void;
   clearRegistrationSuccess: () => void;
+
+  // Telegram actions
+  loginWithTelegram: (telegramData: TelegramAuthRequest) => Promise<void>;
+  linkTelegram: (telegramData: TelegramAuthRequest) => Promise<void>;
+  unlinkTelegram: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -138,5 +143,77 @@ export const useAuthStore = create<AuthState>()(
     setLoading: (loading: boolean) => set({ isLoading: loading }),
 
     clearRegistrationSuccess: () => set({ registrationSuccess: false }),
+
+    // Telegram authentication
+    loginWithTelegram: async (telegramData: TelegramAuthRequest) => {
+      set({ isLoading: true, error: null });
+
+      try {
+        await apiService.telegramAuth(telegramData);
+        const user = await apiService.getCurrentUser();
+
+        set({
+          user,
+          isAuthenticated: true,
+          isLoading: false,
+          error: null
+        });
+
+        // Identify user in analytics
+        identifyUser(user);
+        trackEvent(AnalyticsEvents.USER_LOGGED_IN, { method: 'telegram' });
+
+        // Show success notification
+        useNotificationStore.getState().showNotification(
+          'success',
+          `Welcome, ${user.username}!`
+        );
+      } catch (error: any) {
+        const errorMessage = error.response?.data?.detail || error.message || 'Telegram login failed';
+        set({
+          error: errorMessage,
+          isLoading: false,
+          isAuthenticated: false,
+          user: null
+        });
+        throw error;
+      }
+    },
+
+    linkTelegram: async (telegramData: TelegramAuthRequest) => {
+      set({ isLoading: true, error: null });
+
+      try {
+        const user = await apiService.telegramLink(telegramData);
+        set({ user, isLoading: false });
+
+        useNotificationStore.getState().showNotification(
+          'success',
+          'Telegram account linked successfully!'
+        );
+      } catch (error: any) {
+        const errorMessage = error.response?.data?.detail || error.message || 'Failed to link Telegram';
+        set({ error: errorMessage, isLoading: false });
+        throw error;
+      }
+    },
+
+    unlinkTelegram: async () => {
+      set({ isLoading: true, error: null });
+
+      try {
+        const user = await apiService.telegramUnlink();
+        set({ user, isLoading: false });
+
+        useNotificationStore.getState().showNotification(
+          'success',
+          'Telegram account unlinked'
+        );
+      } catch (error: any) {
+        const errorMessage = error.response?.data?.detail || error.message || 'Failed to unlink Telegram';
+        set({ error: errorMessage, isLoading: false });
+        throw error;
+      }
+    },
   })
 );

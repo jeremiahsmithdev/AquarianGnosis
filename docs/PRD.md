@@ -323,6 +323,7 @@ The gnostic community faces several interconnected challenges:
 | AUTH-004 | Password reset functionality | High | 🔲 |
 | AUTH-005 | Email verification | High | 🔲 |
 | AUTH-006 | OAuth integration (Google, etc.) | Low | 🔲 |
+| AUTH-007 | Telegram sign in | Medium | 🔲 |
 
 **API Endpoints**:
 ```
@@ -330,6 +331,7 @@ POST /api/v1/auth/register    - Create new account
 POST /api/v1/auth/login       - Authenticate user
 GET  /api/v1/auth/me          - Get current user
 POST /api/v1/auth/logout      - End session
+POST /api/v1/auth/telegram    - Authenticate via Telegram
 ```
 
 **Data Model**:
@@ -337,8 +339,9 @@ POST /api/v1/auth/logout      - End session
 User {
   id: UUID (PK)
   username: String (unique)
-  email: String (unique)
-  password_hash: String
+  email: String (unique, nullable for Telegram-only users)
+  password_hash: String (nullable for Telegram-only users)
+  telegram_id: String (unique, nullable)
   is_verified: Boolean
   is_active: Boolean
   created_at: DateTime

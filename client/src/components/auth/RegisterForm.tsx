@@ -1,6 +1,7 @@
 import React, { useState, FormEvent } from 'react';
 import { useAuthStore } from '../../stores/authStore';
-import type { RegisterRequest } from '../../types';
+import { TelegramLogin } from './TelegramLoginButton';
+import type { RegisterRequest, TelegramUser } from '../../types';
 
 interface RegisterFormProps {
   onSwitchToLogin: () => void;
@@ -17,7 +18,18 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin, onS
   const [confirmPassword, setConfirmPassword] = useState('');
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
-  const { register, isLoading, error, clearError, registrationSuccess, clearRegistrationSuccess } = useAuthStore();
+  const { register, loginWithTelegram, isLoading, error, clearError, registrationSuccess, clearRegistrationSuccess } = useAuthStore();
+
+  const handleTelegramAuth = async (telegramUser: TelegramUser) => {
+    clearError();
+    try {
+      // Telegram auth creates account if doesn't exist, or logs in if it does
+      await loginWithTelegram(telegramUser);
+      onSuccess?.();
+    } catch (err) {
+      // Error is handled by the store
+    }
+  };
 
   const validateForm = (): boolean => {
     const errors: Record<string, string> = {};
@@ -113,7 +125,19 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin, onS
       <div className="form-container">
         <h2 className="form-title">Join Our Community</h2>
         <p className="form-subtitle">Create an account to connect with gnostics worldwide</p>
-        
+
+        {/* Telegram Signup */}
+        <div className="social-login-section">
+          <TelegramLogin
+            onAuth={handleTelegramAuth}
+            disabled={isLoading}
+          />
+        </div>
+
+        <div className="auth-divider">
+          <span>or register with email</span>
+        </div>
+
         {error && (
           <div className="error-message">
             {error}

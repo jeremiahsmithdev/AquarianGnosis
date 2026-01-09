@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { LoginRequest, RegisterRequest, User } from '@/types';
+import type { LoginRequest, RegisterRequest, User, TelegramAuthRequest, ProfileImportOptions } from '@/types';
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api/v1',
@@ -67,6 +67,31 @@ const authApi = {
 
   isAuthenticated: (): boolean => {
     return !!localStorage.getItem('access_token');
+  }
+};
+
+// Telegram Auth API methods
+const telegramApi = {
+  auth: async (telegramData: TelegramAuthRequest) => {
+    const response = await apiClient.post('/telegram/auth', telegramData);
+    const { access_token } = response.data;
+    localStorage.setItem('access_token', access_token);
+    return response.data;
+  },
+
+  link: async (telegramData: TelegramAuthRequest): Promise<User> => {
+    const response = await apiClient.post('/telegram/link', telegramData);
+    return response.data;
+  },
+
+  unlink: async (): Promise<User> => {
+    const response = await apiClient.post('/telegram/unlink');
+    return response.data;
+  },
+
+  importProfile: async (options: ProfileImportOptions): Promise<User> => {
+    const response = await apiClient.post('/telegram/import-profile', options);
+    return response.data;
   }
 };
 
@@ -139,6 +164,12 @@ export const apiService = {
   logout: authApi.logout,
   getCurrentUser: authApi.getCurrentUser,
   isAuthenticated: authApi.isAuthenticated,
+
+  // Telegram auth methods
+  telegramAuth: telegramApi.auth,
+  telegramLink: telegramApi.link,
+  telegramUnlink: telegramApi.unlink,
+  telegramImportProfile: telegramApi.importProfile,
 
   // Map methods
   getUserLocation: mapApi.getUserLocation,

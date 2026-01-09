@@ -10,6 +10,7 @@ from app.core.logging import configure_logging, get_logger, set_correlation_id
 from app.core.redis import redis_manager
 from app.core.scheduler import task_scheduler
 from app.api.auth import auth_router
+from app.api.telegram_auth import telegram_router
 from app.api.users import users_router
 from app.api.map import map_router
 from app.api.messages import messages_router
@@ -116,6 +117,7 @@ app.add_middleware(
 
 # Include API routers
 app.include_router(auth_router, prefix="/api/v1/auth", tags=["authentication"])
+app.include_router(telegram_router, prefix="/api/v1/telegram", tags=["telegram-auth"])
 app.include_router(users_router, prefix="/api/v1/users", tags=["users"])
 app.include_router(map_router, prefix="/api/v1/map", tags=["map"])
 app.include_router(messages_router, prefix="/api/v1/messages", tags=["messages"])
