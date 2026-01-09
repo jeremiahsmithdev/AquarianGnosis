@@ -133,7 +133,9 @@ async def list_users(
             is_admin=user.is_admin,
             created_at=user.created_at,
             updated_at=user.updated_at,
-            location_count=location_count
+            location_count=location_count,
+            auth_provider=user.auth_provider,
+            telegram_username=user.telegram_username
         ))
 
     return UserListResponse(
@@ -168,7 +170,9 @@ async def get_user(
         is_admin=user.is_admin,
         created_at=user.created_at,
         updated_at=user.updated_at,
-        location_count=location_count
+        location_count=location_count,
+        auth_provider=user.auth_provider,
+        telegram_username=user.telegram_username
     )
 
 
@@ -254,7 +258,9 @@ async def update_user(
         is_admin=user.is_admin,
         created_at=user.created_at,
         updated_at=user.updated_at,
-        location_count=location_count
+        location_count=location_count,
+        auth_provider=user.auth_provider,
+        telegram_username=user.telegram_username
     )
 
 

@@ -29,13 +29,15 @@ class AdminUserResponse(BaseModel):
     """User data as seen by administrators."""
     id: UUID
     username: str
-    email: str
+    email: Optional[str] = None
     is_verified: bool
     is_active: bool
     is_admin: bool
     created_at: datetime
     updated_at: datetime
     location_count: int = 0
+    auth_provider: Optional[str] = None
+    telegram_username: Optional[str] = None
 
     class Config:
         from_attributes = True
