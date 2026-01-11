@@ -917,7 +917,7 @@
   gap: 20px;
 }
 
-.stat-card {
+.map-page .stat-card {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   padding: 16px 20px;
@@ -926,13 +926,13 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.stat-number {
+.map-page .stat-number {
   font-size: 24px;
   font-weight: 700;
   color: white;
 }
 
-.stat-label {
+.map-page .stat-label {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.8);
   text-transform: uppercase;
